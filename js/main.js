@@ -33,7 +33,7 @@ var PHOTOS = [
  * Получение случайного целого числа в заданном интервале, включительно
  * @param {int} min
  * @param {int} max
- * @returns {int} Случайное число
+ * @return {int} Случайное число
  */
 function getRandomIntInclusive(min, max) {
   min = Math.ceil(min);
@@ -45,7 +45,7 @@ function getRandomIntInclusive(min, max) {
 /**
  * Генерирует случайный объект размещения
  * @param {int} apartmentNumber Порядковый номер генерируемого объекта
- * @returns {{offer: {features: [], rooms: int, address: string, checkin: (string), price: number, guests: int, description: string, title: string, type: (string), checkout: int, photos: []}, author: {avatar: string}, location: {x: int, y: int}}}
+ * @return {{offer: {features: [], rooms: int, address: string, checkin: (string), price: number, guests: int, description: string, title: string, type: (string), checkout: int, photos: []}, author: {avatar: string}, location: {x: int, y: int}}}
  */
 function generateMockApartment(apartmentNumber) {
   var locationX = getRandomIntInclusive(X_MIN, X_MAX);
@@ -60,8 +60,9 @@ function generateMockApartment(apartmentNumber) {
   while (featuresArray.length < featuresCount) {
     currentFeature = FEATURES[getRandomIntInclusive(0, FEATURES.length - 1)];
 
-    if (featuresArray.indexOf(currentFeature) === -1)
+    if (featuresArray.indexOf(currentFeature) === -1) {
       featuresArray[featuresArray.length] = currentFeature;
+    }
   }
 
   // Заполняем массив фотографиями. Тут попроще алгоритм
@@ -124,14 +125,14 @@ function generateMockApartment(apartmentNumber) {
       // случайное число, координата y метки на карте от 130 до 630
       y: locationY
     }
-  }
+  };
 }
 
 /**
  * Создание HTML-ноды "Метка" из объекта размещения на основе шаблона
  * @param {Object} apartmentObject Объект размещения
  * @param {ActiveX.IXMLDOMNode | Node} pinTemplate Шаблон
- * @returns {ActiveX.IXMLDOMNode | Node}
+ * @return {ActiveX.IXMLDOMNode | Node}
  */
 function generateMockPinFromTemplate(apartmentObject, pinTemplate) {
   var pin = pinTemplate.cloneNode(true);
@@ -147,53 +148,30 @@ function generateMockPinFromTemplate(apartmentObject, pinTemplate) {
 }
 
 /**
- * Создание DocumentFragment из массива HTML-нод "Метка"
- * @param {array} pinsHTMLArray Массив HTML-нод "Метка"
- * @returns {DocumentFragment}
- */
-function generateMockFragmentFromArray(pinsHTMLArray) {
-  var fragment = document.createDocumentFragment();
-
-  for (var i = 0; i < pinsHTMLArray.length; i++) {
-    fragment.appendChild(pinsHTMLArray[i]);
-  }
-
-  return fragment;
-}
-
-/**
- * Наполнение заранее приготовленного в разметке блока случайными метками
- * @param {Element} pinsPlaceholder HTML-элемент, куда будут помещены ноды меток
- * Функция не возвращает ничего, а работает с входящим объектом по ссылке
- */
-function fillPinsBlock(pinsPlaceholder) {
-  // Найдем заранее заготовленный HTML-шаблон
-  var template = document.querySelector('#pin')
-    .content
-    .querySelector('.map__pin');
-
-  // Заполним массив HTML-нодами Метка
-  var pinsArray = [];
-
-  for (var i = 0; i < PINS_COUNT; i++) {
-    pinsArray[i] = generateMockPinFromTemplate(generateMockApartment(i + 1), template);
-  }
-
-  // Создаем DocumentFragment, наполненный метками, и добавляем его в разметку
-  pinsPlaceholder.appendChild(generateMockFragmentFromArray(pinsArray));
-}
-
-/**
  * Очень главная функция
  */
 function generateMockPins() {
   document.querySelector('.map').classList.remove('map--faded');
 
+  // Найдем заранее заготовленный HTML-шаблон
+  var template = document.querySelector('#pin')
+    .content
+    .querySelector('.map__pin');
+
+  // Создадим и заполним фрагмент
+  var fragment = document.createDocumentFragment();
+  var pinsArray = [];
+
+  for (var i = 0; i < PINS_COUNT; i++) {
+    pinsArray[i] = generateMockPinFromTemplate(generateMockApartment(i + 1), template);
+    fragment.appendChild(pinsArray[i]);
+  }
+
   // Найдем блок для размещения меток
   var pinsPlaceholder = document.querySelector('.map__pins');
 
-  // Заполним этот блок Фрагментом
-  fillPinsBlock(pinsPlaceholder);
+  // Создаем DocumentFragment, наполненный метками, и добавляем его в разметку
+  pinsPlaceholder.appendChild(fragment);
 }
 
 // Покажем на карте случайные метки
