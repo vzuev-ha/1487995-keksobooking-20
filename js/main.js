@@ -2,10 +2,11 @@
 
 var PINS_COUNT = 8;
 
-var APARTMENT_TYPES = ['palace', 'flat', 'house', 'bungalow'];
+var APARTMENT_TYPES = ['bungalo', 'flat', 'house', 'palace'];
+var APARTMENT_TYPE_MIN_PRICES = [0, 1000, 5000, 10000];
 
-var X_MIN = 50;
-var X_MAX = 1100;
+var X_MIN = 0; // 50;
+var X_MAX = document.querySelector('.map').clientWidth; // 1100;
 var Y_MIN = 130;
 var Y_MAX = 630;
 
@@ -27,6 +28,14 @@ var PHOTOS = [
   'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
   'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 
+var ROOMS_KEY = [1, 2, 3, 100];
+
+var ROOMS_VALUE = [
+  {guests: [1], message: 'В 1 комнате можно разместить только 1 гостя!'},
+  {guests: [1, 2], message: 'В 2 комнатах можно разместить только 1 или 2 гостей!'},
+  {guests: [1, 2, 3], message: 'В 3 комнатах можно разместить от 1 до 3 гостей!'},
+  {guests: [0], message: 'Выбранный вариант размещения - не для гостей!'}
+];
 
 /**
  * Получение случайного целого числа в заданном интервале, включительно
@@ -175,11 +184,9 @@ function generateMockPinFromTemplate(apartmentObject, pinTemplate) {
 }
 
 /**
- * Очень главная функция
+ * Генерация тестовых меток на карте
  */
 function generateMockPins() {
-  document.querySelector('.map').classList.remove('map--faded');
-
   // Найдем заранее заготовленный HTML-шаблон
   var template = document.querySelector('#pin')
     .content
@@ -201,5 +208,171 @@ function generateMockPins() {
   pinsPlaceholder.appendChild(fragment);
 }
 
-// Покажем на карте случайные метки
-generateMockPins();
+/**
+ * Переключение состояния страницы (блокировка/разблокировка)
+ * @param {boolean} isActivate Активировать?
+ */
+function switchActiveState(isActivate) {
+  var mapControl = document.querySelector('.map');
+  var mapFiltersContainer = document.querySelector('.map__filters-container');
+  var mapFilters = mapFiltersContainer.querySelectorAll('select, fieldset');
+
+  var adForm = document.querySelector('.ad-form');
+  var adFormFieldSets = adForm.querySelectorAll('fieldset');
+
+  // Установим соответствующее состояние полям ввода
+  var i;
+  for (i = 0; i < mapFilters.length - 1; i++) {
+    mapFilters[i].disabled = !isActivate;
+  }
+
+  for (i = 0; i < adFormFieldSets.length - 1; i++) {
+    adFormFieldSets[i].disabled = !isActivate;
+  }
+
+  if (isActivate) {
+    // Включим карту
+    mapControl.classList.remove('map--faded');
+
+    // Включим элементы управления
+    adForm.classList.remove('ad-form--disabled');
+
+  } else {
+    // Отключим карту
+    mapControl.classList.add('map--faded');
+
+    // Отключим элементы управления
+    adForm.classList.add('ad-form--disabled');
+  }
+}
+
+/**
+ * Заполнение поля адреса координатами метки
+ */
+function fillAddressFromPinMain() {
+  var adForm = document.querySelector('.ad-form');
+  var addressField = adForm.querySelector('#address');
+  var mapPinMain = document.querySelector('.map__pin--main');
+
+  var x = parseInt(mapPinMain.style.left + Math.round(mapPinMain.style.width / 2), 10);
+  var y = parseInt(mapPinMain.style.top + mapPinMain.style.height, 10);
+
+  addressField.value = x + ', ' + y;
+}
+
+/**
+ * Активация страницы
+ */
+function activatePage() {
+  switchActiveState(true);
+
+  // Покажем на карте случайные метки
+  generateMockPins();
+}
+
+/**
+ * Деактивация страницы
+ */
+function deactivatePage() {
+  switchActiveState(false);
+}
+
+/**
+ * Обработчик клика по главной метке
+ * @param {event} evt
+ */
+function onMapPinMainClick(evt) {
+  if (typeof evt === 'object' && evt.button === 0) {
+    // Активировать страницу
+    activatePage();
+
+    // Заполнить поле адреса
+    fillAddressFromPinMain();
+  }
+}
+
+/**
+ * Обработчик изменения формы создания объявления. Единый для всех полей.
+ * @param {event} evt
+ */
+function onAdFormChange(evt) {
+  // Делаем все проверки в одном обработчике, так легче управлять кодом
+  var adForm = document.querySelector('.ad-form');
+
+  if (evt.target) {
+    if (evt.target.id === 'timein') {
+      adForm.querySelector('#timeout').value = evt.target.value;
+
+    } else if (evt.target.id === 'timeout') {
+      adForm.querySelector('#timein').value = evt.target.value;
+
+    } else if (evt.target.id === 'type') {
+      adForm.querySelector('#price').min = APARTMENT_TYPE_MIN_PRICES[APARTMENT_TYPES.indexOf(evt.target.value)];
+
+    } else if (evt.target.id === 'room_number') {
+      changeCapacityValidity(evt.target, adForm.querySelector('#capacity'));
+
+    } else if (evt.target.id === 'capacity') {
+      changeCapacityValidity(adForm.querySelector('#room_number'), evt.target);
+
+    }
+  }
+}
+
+/**
+ * Установка CustomValidity для поля Capacity (вместимость)
+ * @param {HTMLElement} roomInput Поле ввода количества комнат
+ * @param {HTMLElement} guestInput Поле ввода количества гостей
+ */
+function changeCapacityValidity(roomInput, guestInput) {
+  var roomNum = parseInt(roomInput.value, 10);
+  var guestNum = parseInt(guestInput.value, 10);
+
+  // Найдем массив возможных значений Кол-ва гостей для данного Кол-ва комнат
+  // Делаем это при помощи двух массивов - один с ключами, другой - со значениями
+  // Поскольку find по массиву объектов нам пока нельзя ;)
+  var roomValue = ROOMS_VALUE[ROOMS_KEY.indexOf(roomNum)];
+  if (roomValue) {
+    // Если такое количество гостей во-можно - стираем ошибку, иначе - обновляем из массива
+    if (roomValue.guests.indexOf(guestNum) > -1) {
+      guestInput.setCustomValidity('');
+    } else {
+      guestInput.setCustomValidity(roomValue.message);
+    }
+  } else {
+    guestInput.setCustomValidity('');
+  }
+}
+
+/**
+ * Главная функция
+ */
+function init() {
+  // Деактивируем страницу
+  deactivatePage();
+
+  // Навесим событие на главный Pin
+  var mapPinMain = document.querySelector('.map__pin--main');
+  mapPinMain.addEventListener('click', onMapPinMainClick);
+
+  // И заполним адрес значениями этого Pin-а
+  fillAddressFromPinMain();
+
+  // Навесим события на input-ы формы создания объявления
+  var adForm = document.querySelector('.ad-form');
+
+  adForm.querySelector('#timein').addEventListener('change', onAdFormChange);
+  adForm.querySelector('#timeout').addEventListener('change', onAdFormChange);
+
+  adForm.querySelector('#type').addEventListener('change', onAdFormChange);
+
+  adForm.querySelector('#room_number').addEventListener('change', onAdFormChange);
+  adForm.querySelector('#capacity').addEventListener('change', onAdFormChange);
+  // Обновим состояние, чтобы валидность проверялась даже без изменения инпутов
+  changeCapacityValidity(
+      adForm.querySelector('#room_number'),
+      adForm.querySelector('#capacity')
+  );
+}
+
+init();
