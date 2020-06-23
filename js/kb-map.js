@@ -29,11 +29,10 @@
     window.kbForm.addressField.value = x + ', ' + y;
   }
 
-  /* *
+  /**
    * Обработчик клика по главной метке
-   * @param {event} evt Событие
-   * @listens event
-   *
+   * @param {*} evt Событие
+   * @listens {event} evt Событие
    */
   function onMapPinMainClick(evt) {
     if (typeof evt === 'object' && evt.button === 0) {

@@ -2,31 +2,34 @@
 
 (function () {
 
-  /* *
+  /**
    * Обработчик изменения формы создания объявления. Единый для всех полей.
+   * @param {*} evt Событие
    * @listens {event} evt Событие
    */
   function onAdFormChange(evt) {
     // Делаем все проверки в одном обработчике, так легче управлять кодом
-    if (evt.target) {
-      switch (evt.target.id) {
-        case 'timein':
-          adForm.querySelector('#timeout').value = evt.target.value;
-          break;
-        case 'timeout':
-          adForm.querySelector('#timein').value = evt.target.value;
-          break;
-        case 'type':
-          adForm.querySelector('#price').min = window.kbConstants
-            .APARTMENT_TYPE_MIN_PRICES[window.kbConstants.APARTMENT_TYPES.indexOf(evt.target.value)];
-          break;
-        case 'room_number':
-          changeCapacityValidity(evt.target, adForm.querySelector('#capacity'));
-          break;
-        case 'capacity':
-          changeCapacityValidity(adForm.querySelector('#room_number'), evt.target);
-          break;
-      }
+    if (!evt.target) {
+      return;
+    }
+
+    switch (evt.target.id) {
+      case 'timein':
+        adForm.querySelector('#timeout').value = evt.target.value;
+        break;
+      case 'timeout':
+        adForm.querySelector('#timein').value = evt.target.value;
+        break;
+      case 'type':
+        adForm.querySelector('#price').min = window.kbConstants
+          .APARTMENT_TYPE_MIN_PRICES[window.kbConstants.APARTMENT_TYPES.indexOf(evt.target.value)];
+        break;
+      case 'room_number':
+        changeCapacityValidity(evt.target, adForm.querySelector('#capacity'));
+        break;
+      case 'capacity':
+        changeCapacityValidity(adForm.querySelector('#room_number'), evt.target);
+        break;
     }
   }
 
