@@ -67,7 +67,10 @@
   window.kbForm.adForm.querySelector('#timein').addEventListener('change', window.kbForm.onAdFormChange);
   window.kbForm.adForm.querySelector('#timeout').addEventListener('change', window.kbForm.onAdFormChange);
 
-  window.kbForm.adForm.querySelector('#type').addEventListener('change', window.kbForm.onAdFormChange);
+  var typeInput = window.kbForm.adForm.querySelector('#type');
+  typeInput.addEventListener('change', window.kbForm.onAdFormChange);
+  // Так как по умолчанию у нас указана квартира, нужно вызвать событие, чтобы значение placeholder изменилось
+  typeInput.dispatchEvent(new Event('change'));
 
   window.kbForm.adForm.querySelector('#room_number').addEventListener('change', window.kbForm.onAdFormChange);
   window.kbForm.adForm.querySelector('#capacity').addEventListener('change', window.kbForm.onAdFormChange);

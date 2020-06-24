@@ -21,8 +21,11 @@
         adForm.querySelector('#timein').value = evt.target.value;
         break;
       case 'type':
-        adForm.querySelector('#price').min = window.kbConstants
+        var minPrice = window
+          .kbConstants
           .APARTMENT_TYPE_MIN_PRICES[window.kbConstants.APARTMENT_TYPES.indexOf(evt.target.value)];
+        adForm.querySelector('#price').min = minPrice;
+        adForm.querySelector('#price').placeholder = minPrice;
         break;
       case 'room_number':
         changeCapacityValidity(evt.target, adForm.querySelector('#capacity'));
