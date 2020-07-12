@@ -4,6 +4,8 @@
   var PINS_COUNT = 18;
 
   var APARTMENT_TYPES = ['bungalo', 'flat', 'house', 'palace'];
+  var APARTMENT_TYPES_RUS = ['Бунгало', 'Квартира', 'Дом', 'Дворец'];
+
   var APARTMENT_TYPE_MIN_PRICES = [0, 1000, 5000, 10000];
 
   var X_MIN = 0; // 50;
@@ -38,6 +40,8 @@
     PINS_COUNT: PINS_COUNT,
 
     APARTMENT_TYPES: APARTMENT_TYPES,
+    APARTMENT_TYPES_RUS: APARTMENT_TYPES_RUS,
+
     APARTMENT_TYPE_MIN_PRICES: APARTMENT_TYPE_MIN_PRICES,
 
     X_MIN: X_MIN,

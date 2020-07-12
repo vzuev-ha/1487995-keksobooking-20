@@ -39,8 +39,8 @@
   function activatePage() {
     // Запустим загрузку меток. Пока они грузятся, отобразим окно
     window.kbBackend.loadData(
-      window.kbMap.generatePins,
-      window.kbBackend.networkErrorHandler
+        window.kbMap.generatePinsAndCards,
+        window.kbBackend.networkErrorHandler
     );
 
     switchPageActiveState(true);
