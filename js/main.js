@@ -37,10 +37,13 @@
    * Активация страницы
    */
   function activatePage() {
-    switchPageActiveState(true);
+    // Запустим загрузку меток. Пока они грузятся, отобразим окно
+    window.kbBackend.loadData(
+      window.kbMap.generatePins,
+      window.kbBackend.networkErrorHandler
+    );
 
-    // Покажем на карте случайные метки
-    window.kbMap.generatePins();
+    switchPageActiveState(true);
   }
 
   /**

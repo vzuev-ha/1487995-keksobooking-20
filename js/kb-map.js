@@ -4,15 +4,22 @@
   /**
    * Генерация тестовых меток на карте
    */
-  function generatePins() {
+  function generatePins(pinsJSON) {
+    pinsPlaceholder.innerHTML = '';
+
     // Создадим и заполним фрагмент
     var fragment = document.createDocumentFragment();
-    var pinsArray = [];
 
-    for (var i = 0; i < window.kbConstants.PINS_COUNT; i++) {
-      pinsArray[i] = window.kbPin
-        .generatePinFromTemplate(window.kbMockData.generateApartment(i + 1));
-      fragment.appendChild(pinsArray[i]);
+    for (var i = 0; i < Math.min(window.kbConstants.PINS_COUNT, pinsJSON.length); i++) {
+      // ТЗ, условие 5.2:  Если в объекте с описанием объявления отсутствует поле offer,
+      //   то метка объявления не должна отображаться на карте.
+      if (!pinsJSON[i].offer) {
+        continue;
+      }
+
+      fragment.appendChild(
+          window.kbPin.generatePinFromTemplate(pinsJSON[i])
+      );
     }
 
     // Создаем DocumentFragment, наполненный метками, и добавляем его в разметку
