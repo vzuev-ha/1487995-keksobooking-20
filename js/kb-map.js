@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+
   /**
    * Генерация тестовых меток на карте
    * @param {Array} objectsJSON Массив данных, полученных по сети
@@ -16,9 +17,11 @@
         continue;
       }
 
-      fragment.appendChild(
-          window.kbPin.generatePinFromTemplate(objectsJSON[i])
-      );
+      var pin = window.kbPin.generatePinFromTemplate(objectsJSON[i]);
+      pin.dataset.index = i.toString();
+      pin.addEventListener('click', onPinClick);
+
+      fragment.appendChild(pin);
     }
 
     // Добавляем наполненный DocumentFragment в разметку
@@ -27,11 +30,12 @@
   }
 
   function generateCards(objectsJSON) {
+    globalCardsArray = [];
+
     // Создадим и заполним фрагмент
     var fragment = document.createDocumentFragment();
 
-    // for (var i = 0; i < Math.min(window.kbConstants.PINS_COUNT, objectsJSON.length); i++) {
-    for (var i = 0; i < 1; i++) {
+    for (var i = 0; i < Math.min(window.kbConstants.PINS_COUNT, objectsJSON.length); i++) {
       // ТЗ, условие 5.2:  Если в объекте с описанием объявления отсутствует поле offer,
       //   то метка объявления не должна отображаться на карте.
       //   Значит, и карточка не должна существовать
@@ -39,17 +43,32 @@
         continue;
       }
 
-      fragment.appendChild(
-          window.kbCard.generateCardFromTemplate(objectsJSON[i])
-      );
-    }
+      var card = window.kbCard.generateCardFromTemplate(objectsJSON[i]);
+      card.dataset.index = i.toString();
+      card.classList.add('hidden');
 
+      var closeButton = card.querySelector('.popup__close');
+      closeButton.addEventListener('click', function (evt) {
+        evt.target.parentElement.classList.add('hidden');
+      });
+
+      //
+      // Обработчик нажатия на клавишу Escape мы привызываем к самому документу, один раз, в main.js
+      //
+
+      globalCardsArray.push(card);
+      fragment.appendChild(card);
+    }
 
     // Добавляем наполненный DocumentFragment в разметку
     mapElement.insertBefore(fragment, mapFiltersContainer);
   }
 
 
+  /**
+   * Обертка, чтобы вызывать создание и меток, и карточек одним вызовом
+   * @param {Array} objectsJSON Массив объектов размещения
+   */
   function generatePinsAndCards(objectsJSON) {
     generatePins(objectsJSON);
     generateCards(objectsJSON);
@@ -66,22 +85,53 @@
     window.kbForm.addressField.value = x + ', ' + y;
   }
 
+
   /**
    * Обработчик клика по главной метке
    * @param {*} evt Событие
    * @listens {event} evt Событие
    */
   function onMapPinMainClick(evt) {
-    if (typeof evt === 'object' && evt.button === 0) {
-      // Активировать страницу
-      window.main.activatePage();
+    if (typeof evt !== 'object' || evt.button !== 0) {
+      return;
+    }
 
-      // Заполнить поле адреса
-      fillAddressFromPinMain();
+    // Активировать страницу
+    window.main.activatePage();
+
+    // Заполнить поле адреса
+    fillAddressFromPinMain();
+  }
+
+
+  /**
+   * Обработчик клика по меткам объявлений
+   * @param {*} evt Событие
+   * @listens {event} evt Событие
+   */
+  function onPinClick(evt) {
+    if (typeof evt !== 'object' || evt.button !== 0) {
+      return;
+    }
+
+    for (var i = 0; i < globalCardsArray.length; i++) {
+      if (!globalCardsArray[i].classList.contains('hidden') && i.toString() !== evt.currentTarget.dataset.index) {
+        globalCardsArray[i].classList.add('hidden');
+      }
+
+      if (i.toString() === evt.currentTarget.dataset.index) {
+        globalCardsArray[i].classList.remove('hidden');
+      }
     }
   }
 
+
   // Инициализация
+
+  // Глобальный массив для хранения карточек объявлений.
+  // Потому что нормального способа передать в обработчик метки ссылку на карточку - нет.
+  var globalCardsArray = [];
+
 
   // Найдем блок для размещения меток
   var pinsPlaceholder = document.querySelector('.map__pins');

@@ -33,6 +33,7 @@
     }
   }
 
+
   /**
    * Активация страницы
    */
@@ -45,6 +46,7 @@
 
     switchPageActiveState(true);
   }
+
 
   /**
    * Деактивация страницы
@@ -82,6 +84,21 @@
       window.kbForm.adForm.querySelector('#room_number'),
       window.kbForm.adForm.querySelector('#capacity')
   );
+
+
+  // Навесим обработку клавиши Escape для закрытия карточек
+  // Мы его не будем переиспользовать или удалять, поэтому создадим неименованным
+  document.addEventListener('keydown', function (evt) {
+    if (evt.key === 'Escape') {
+      evt.preventDefault();
+
+      var cards = document.querySelectorAll('.map__card');
+
+      for (var i = 0; i < cards.length; i++) {
+        cards[i].classList.add('hidden');
+      }
+    }
+  });
 
 
   window.main = {
