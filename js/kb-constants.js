@@ -1,9 +1,11 @@
 'use strict';
 
 (function () {
-  var PINS_COUNT = 8;
+  var PINS_COUNT = 18;
 
   var APARTMENT_TYPES = ['bungalo', 'flat', 'house', 'palace'];
+  var APARTMENT_TYPES_RUS = ['Бунгало', 'Квартира', 'Дом', 'Дворец'];
+
   var APARTMENT_TYPE_MIN_PRICES = [0, 1000, 5000, 10000];
 
   var X_MIN = 0; // 50;
@@ -33,16 +35,13 @@
     {guests: [0], message: 'Выбранный вариант размещения - не для гостей!'}
   ];
 
-  var MOCK_PHOTOS = [
-    'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
-    'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
-    'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
-
 
   window.kbConstants = {
     PINS_COUNT: PINS_COUNT,
 
     APARTMENT_TYPES: APARTMENT_TYPES,
+    APARTMENT_TYPES_RUS: APARTMENT_TYPES_RUS,
+
     APARTMENT_TYPE_MIN_PRICES: APARTMENT_TYPE_MIN_PRICES,
 
     X_MIN: X_MIN,
@@ -65,9 +64,7 @@
 
     ROOMS_KEY: ROOMS_KEY,
 
-    ROOMS_VALUE: ROOMS_VALUE,
-
-    MOCK_PHOTOS: MOCK_PHOTOS
+    ROOMS_VALUE: ROOMS_VALUE
   };
 
 })();
