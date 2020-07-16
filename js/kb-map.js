@@ -75,6 +75,17 @@
   }
 
 
+  function reloadMapData(objectsJSON) {
+    // Запишем полученные карточки объявлений в глобальную переменную, чтобы можно было фильтровать
+    window.kbMap.globalApartmentsJSON = objectsJSON;
+
+    generatePinsAndCards(objectsJSON);
+
+    // Как только объявления загружены, покажем фильтры на карте
+    // ТЗ, условие 5.9
+    window.kbForm.switchMapFiltersAccess(true);
+  }
+
   /**
    * Заполнение поля адреса координатами метки
    */
@@ -104,6 +115,19 @@
   }
 
 
+  function toggleCards(cardID) {
+    for (var i = 0; i < globalCardsArray.length; i++) {
+      if (!globalCardsArray[i].classList.contains('hidden') && i.toString() !== cardID) {
+        globalCardsArray[i].classList.add('hidden');
+      }
+
+      if (i.toString() === cardID) {
+        globalCardsArray[i].classList.remove('hidden');
+      }
+    }
+
+  }
+
   /**
    * Обработчик клика по меткам объявлений
    * @param {*} evt Событие
@@ -114,19 +138,15 @@
       return;
     }
 
-    for (var i = 0; i < globalCardsArray.length; i++) {
-      if (!globalCardsArray[i].classList.contains('hidden') && i.toString() !== evt.currentTarget.dataset.index) {
-        globalCardsArray[i].classList.add('hidden');
-      }
-
-      if (i.toString() === evt.currentTarget.dataset.index) {
-        globalCardsArray[i].classList.remove('hidden');
-      }
-    }
+    toggleCards(evt.currentTarget.dataset.index);
   }
 
 
   // Инициализация
+
+  // Глобальный массив для хранения объявлений с сервера
+  var globalApartmentsJSON = [];
+
 
   // Глобальный массив для хранения карточек объявлений.
   // Потому что нормального способа передать в обработчик метки ссылку на карточку - нет.
@@ -145,11 +165,17 @@
   var mapFiltersContainer = document.querySelector('.map__filters-container');
 
   window.kbMap = {
+    globalApartmentsJSON: globalApartmentsJSON,
+    mapFiltersContainer: mapFiltersContainer,
+
     generatePinsAndCards: generatePinsAndCards,
+    reloadMapData: reloadMapData,
 
     fillAddressFromPinMain: fillAddressFromPinMain,
 
-    onMapPinMainClick: onMapPinMainClick
+    onMapPinMainClick: onMapPinMainClick,
+
+    toggleCards: toggleCards
   };
 
 })();
