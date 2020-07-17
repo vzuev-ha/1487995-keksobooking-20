@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var PINS_COUNT = 18;
+  var MAX_PINS_COUNT = 5;
 
   var APARTMENT_TYPES = ['bungalo', 'flat', 'house', 'palace'];
   var APARTMENT_TYPES_RUS = ['Бунгало', 'Квартира', 'Дом', 'Дворец'];
@@ -37,7 +37,7 @@
 
 
   window.kbConstants = {
-    PINS_COUNT: PINS_COUNT,
+    PINS_COUNT: MAX_PINS_COUNT,
 
     APARTMENT_TYPES: APARTMENT_TYPES,
     APARTMENT_TYPES_RUS: APARTMENT_TYPES_RUS,

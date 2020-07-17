@@ -1,50 +1,20 @@
 'use strict';
 
 (function () {
-  /**
-   * Переключение состояния страницы (блокировка/разблокировка)
-   * @param {boolean} isActivate Активировать?
-   */
-  function switchPageActiveState(isActivate) {
-    var mapControl = document.querySelector('.map');
-    var mapFiltersContainer = document.querySelector('.map__filters-container');
-    var mapFilters = mapFiltersContainer.querySelectorAll('select, fieldset');
-
-    var adForm = document.querySelector('.ad-form');
-    var adFormFieldSets = adForm.querySelectorAll('fieldset');
-
-    // Установим соответствующее состояние полям ввода
-    window.kbForm.switchControlsAccess(mapFilters, isActivate);
-    window.kbForm.switchControlsAccess(adFormFieldSets, isActivate);
-
-    if (isActivate) {
-      // Включим карту
-      mapControl.classList.remove('map--faded');
-
-      // Включим элементы управления
-      adForm.classList.remove('ad-form--disabled');
-
-    } else {
-      // Отключим карту
-      mapControl.classList.add('map--faded');
-
-      // Отключим элементы управления
-      adForm.classList.add('ad-form--disabled');
-    }
-  }
-
 
   /**
    * Активация страницы
    */
   function activatePage() {
-    // Запустим загрузку меток. Пока они грузятся, отобразим окно
+    // Запустим загрузку меток.
+    // Только после загрузки меток покажем фильтры на карте!
     window.kbBackend.loadData(
-        window.kbMap.generatePinsAndCards,
+        window.kbMap.reloadMapData,
         window.kbBackend.networkErrorHandler
     );
 
-    switchPageActiveState(true);
+    // Но пока метки грузятся, мы можем показать форму ввода
+    window.kbForm.switchAdFormControlsAccess(true);
   }
 
 
@@ -52,7 +22,8 @@
    * Деактивация страницы
    */
   function deactivatePage() {
-    switchPageActiveState(false);
+    window.kbForm.switchAdFormControlsAccess(false);
+    window.kbForm.switchMapFiltersAccess(false);
   }
 
 
@@ -67,6 +38,12 @@
 
   // И заполним адрес значениями этого Pin-а
   window.kbMap.fillAddressFromPinMain();
+
+
+  // Навесим обработчики на форму фильтра объявлений на карте.
+  // На саму форму, так как мы все равно опрашиваем все input-ы
+  window.kbMap.mapFiltersContainer.addEventListener('change', window.kbForm.onMapFilterChange);
+
 
   // Навесим события на input-ы формы создания объявления
   window.kbForm.adForm.querySelector('#timein').addEventListener('change', window.kbForm.onAdFormChange);
@@ -92,11 +69,7 @@
     if (evt.key === 'Escape') {
       evt.preventDefault();
 
-      var cards = document.querySelectorAll('.map__card');
-
-      for (var i = 0; i < cards.length; i++) {
-        cards[i].classList.add('hidden');
-      }
+      window.kbMap.toggleCards();
     }
   });
 
