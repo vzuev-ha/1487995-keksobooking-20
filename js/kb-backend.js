@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  // var responseURL = 'https://javascript.pages.academy/code-and-magick';
+  var submitURL = 'https://javascript.pages.academy/keksobooking';
 
   var dataURL = 'https://javascript.pages.academy/keksobooking/data';
 
@@ -10,17 +10,6 @@
   };
   var TIMEOUT_IN_MS = 10000;
 
-  function networkErrorHandler(errorMessage) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
-    node.style.position = 'absolute';
-    node.style.left = '0';
-    node.style.right = '0';
-    node.style.fontSize = '30px';
-
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
-  }
 
   function prepareXMLHttpRequest(onSuccess, onError) {
     var xhr = new XMLHttpRequest();
@@ -56,22 +45,22 @@
     }
   }
 
-  /*
+
   function submitData(data, onSuccess, onError) {
     var xhr = prepareXMLHttpRequest(onSuccess, onError);
 
     try {
-      xhr.open('POST', responseURL);
+      xhr.open('POST', submitURL);
       xhr.send(data);
     } catch (e) {
       onError(e.message);
     }
-  }*/
+  }
 
 
   window.kbBackend = {
     loadData: loadData,
-    networkErrorHandler: networkErrorHandler
+    submitData: submitData
   };
 
 })();

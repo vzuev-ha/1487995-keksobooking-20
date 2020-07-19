@@ -33,11 +33,11 @@
   function clearPlaceholder() {
     var pins = pinsPlaceholder.querySelectorAll('.map__pin');
 
-    for (var i = 0; i < pins.length - 1; i++) {
-      if (!pins[i].classList.contains('map__pin--main')) {
-        pins[i].remove();
+    pins.forEach(function (it) {
+      if (!it.classList.contains('map__pin--main')) {
+        it.remove();
       }
-    }
+    });
   }
 
   function generateCards(objectsJSON) {
@@ -95,6 +95,8 @@
     // Как только объявления загружены, покажем фильтры на карте
     // ТЗ, условие 5.9
     window.kbForm.switchMapFiltersAccess(true);
+
+    window.kbForm.switchAdFormControlsAccess(true);
   }
 
 

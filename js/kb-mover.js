@@ -29,7 +29,7 @@
     function onMouseMove(moveEvt) {
       moveEvt.preventDefault();
 
-      // Обновим координаты хвоста метки и заполним поле вдреса координатами
+      // Обновим координаты хвоста метки и заполним поле адреса координатами
       window.kbMap.fillAddressFromPinMain();
 
       dragged = true;
@@ -69,6 +69,9 @@
 
     function onMouseUp(upEvt) {
       upEvt.preventDefault();
+
+      // Обновим координаты хвоста метки и заполним поле адреса координатами
+      window.kbMap.fillAddressFromPinMain();
 
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);

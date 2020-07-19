@@ -173,6 +173,26 @@
     }
   }
 
+  function onAdFormSubmit(evt) {
+    window.kbBackend.submitData(
+        new FormData(adForm),
+        submitSuccess,
+        window.kbMessages.errorMessage
+    );
+
+    evt.preventDefault();
+  }
+
+
+  function submitSuccess() {
+    window.kbMap.reloadMapData([]);
+
+    adForm.reset();
+    window.main.deactivatePage();
+
+    window.kbMessages.successMessage();
+  }
+
 
   // Инициализация
   // Найдем форму создания объявления и экспортируем ее
@@ -189,7 +209,9 @@
     switchMapFiltersAccess: switchMapFiltersAccess,
     switchAdFormControlsAccess: switchAdFormControlsAccess,
 
-    onMapFilterChange: onMapFilterChange
+    onMapFilterChange: onMapFilterChange,
+
+    onAdFormSubmit: onAdFormSubmit
   };
 
 })();
