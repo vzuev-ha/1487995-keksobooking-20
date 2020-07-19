@@ -58,8 +58,10 @@
 
 
   // Навесим обработчики на форму фильтра объявлений на карте.
-  // На саму форму, так как мы все равно опрашиваем все input-ы
-  window.kbMap.mapFiltersContainer.addEventListener('change', window.kbForm.onMapFilterChange);
+  //   Навешиваем на саму форму, так как мы все равно опрашиваем все input-ы
+  // И еще воспользуемся приемом для устрания дребезка при обновлении фильтра
+  window.kbMap.mapFiltersContainer.addEventListener('change',
+      window.kbDebouncer.debounceEnclosed(window.kbForm.onMapFilterChange));
 
 
   // Навесим события на input-ы формы создания объявления
