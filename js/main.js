@@ -33,10 +33,10 @@
   deactivatePage();
 
   // Навесим событие на главный Pin
-  var mapPinMain = document.querySelector('.map__pin--main');
-  mapPinMain.addEventListener('click', window.kbMap.onMapPinMainClick);
+  // window.kbMap.mapPinMain.addEventListener('click', window.kbMap.onMapPinMainClick);
+  window.kbMap.mapPinMain.addEventListener('mousedown', window.kbMover.onMapPinMainMouseDown);
 
-  // И заполним адрес значениями этого Pin-а
+  // Заполним поле адреса координатами
   window.kbMap.fillAddressFromPinMain();
 
 
@@ -69,7 +69,7 @@
     if (evt.key === 'Escape') {
       evt.preventDefault();
 
-      window.kbMap.toggleCards();
+      window.kbMap.showCard();
     }
   });
 

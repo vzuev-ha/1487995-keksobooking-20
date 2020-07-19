@@ -3,6 +3,16 @@
 (function () {
   var MAX_PINS_COUNT = 5;
 
+  var MAP_PIN_MAIN_TAIL_HEIGHT = 15;
+
+  // Смещение острого конца метки относительно левого верхнего края метки
+  var MAP_PIN_MAIN_TAIL_OFFSET = {
+    offsetX: Math.round(document.querySelector('.map__pin--main')
+      .getBoundingClientRect().width / 2),
+    offsetY: Math.round(document.querySelector('.map__pin--main')
+      .getBoundingClientRect().height) + MAP_PIN_MAIN_TAIL_HEIGHT
+  };
+
   var APARTMENT_TYPES = ['bungalo', 'flat', 'house', 'palace'];
   var APARTMENT_TYPES_RUS = ['Бунгало', 'Квартира', 'Дом', 'Дворец'];
 
@@ -38,6 +48,8 @@
 
   window.kbConstants = {
     PINS_COUNT: MAX_PINS_COUNT,
+
+    MAP_PIN_MAIN_TAIL_OFFSET: MAP_PIN_MAIN_TAIL_OFFSET,
 
     APARTMENT_TYPES: APARTMENT_TYPES,
     APARTMENT_TYPES_RUS: APARTMENT_TYPES_RUS,

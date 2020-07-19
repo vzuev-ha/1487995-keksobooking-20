@@ -25,8 +25,19 @@
     }
 
     // Добавляем наполненный DocumentFragment в разметку
-    pinsPlaceholder.innerHTML = '';
+    clearPlaceholder();
     pinsPlaceholder.appendChild(fragment);
+  }
+
+
+  function clearPlaceholder() {
+    var pins = pinsPlaceholder.querySelectorAll('.map__pin');
+
+    for (var i = 0; i < pins.length - 1; i++) {
+      if (!pins[i].classList.contains('map__pin--main')) {
+        pins[i].remove();
+      }
+    }
   }
 
   function generateCards(objectsJSON) {
@@ -86,36 +97,31 @@
     window.kbForm.switchMapFiltersAccess(true);
   }
 
+
+  function refreshMapPinMainCoords() {
+    var coords = mapPinMain.getBoundingClientRect();
+    var parentCoords = mapPinMain.parentElement.getBoundingClientRect();
+
+    window.kbMap.globalMapPinMainTailCoords.x = Math.round(coords.left)
+      + window.kbConstants.MAP_PIN_MAIN_TAIL_OFFSET.offsetX
+      - Math.round(parentCoords.left);
+    window.kbMap.globalMapPinMainTailCoords.y = Math.round(coords.top)
+      + window.kbConstants.MAP_PIN_MAIN_TAIL_OFFSET.offsetY
+      - Math.round(parentCoords.top);
+  }
+
   /**
    * Заполнение поля адреса координатами метки
    */
   function fillAddressFromPinMain() {
-    var x = parseInt(mapPinMain.style.left + Math.round(mapPinMain.style.width / 2), 10);
-    var y = parseInt(mapPinMain.style.top + mapPinMain.style.height, 10);
+    refreshMapPinMainCoords();
 
-    window.kbForm.addressField.value = x + ', ' + y;
+    window.kbForm.addressField.value = window.kbMap.globalMapPinMainTailCoords.x
+      + ', ' + window.kbMap.globalMapPinMainTailCoords.y;
   }
 
 
-  /**
-   * Обработчик клика по главной метке
-   * @param {*} evt Событие
-   * @listens {event} evt Событие
-   */
-  function onMapPinMainClick(evt) {
-    if (typeof evt !== 'object' || evt.button !== 0) {
-      return;
-    }
-
-    // Активировать страницу
-    window.main.activatePage();
-
-    // Заполнить поле адреса
-    fillAddressFromPinMain();
-  }
-
-
-  function toggleCards(cardID) {
+  function showCard(cardID) {
     for (var i = 0; i < globalCardsArray.length; i++) {
       if (!globalCardsArray[i].classList.contains('hidden') && i.toString() !== cardID) {
         globalCardsArray[i].classList.add('hidden');
@@ -138,7 +144,7 @@
       return;
     }
 
-    toggleCards(evt.currentTarget.dataset.index);
+    showCard(evt.currentTarget.dataset.index);
   }
 
 
@@ -159,6 +165,13 @@
   // Главная метка на карте
   var mapPinMain = document.querySelector('.map__pin--main');
 
+  // Координаты острого конца метки
+  var globalMapPinMainTailCoords = {
+    x: 0,
+    y: 0
+  };
+
+
   // Карта
   var mapElement = document.querySelector('.map');
   // Элемент, перед которым нужно вставить блок карточек
@@ -166,16 +179,18 @@
 
   window.kbMap = {
     globalApartmentsJSON: globalApartmentsJSON,
+    mapElement: mapElement,
     mapFiltersContainer: mapFiltersContainer,
+
+    mapPinMain: mapPinMain,
+    globalMapPinMainTailCoords: globalMapPinMainTailCoords,
 
     generatePinsAndCards: generatePinsAndCards,
     reloadMapData: reloadMapData,
 
     fillAddressFromPinMain: fillAddressFromPinMain,
 
-    onMapPinMainClick: onMapPinMainClick,
-
-    toggleCards: toggleCards
+    showCard: showCard
   };
 
 })();

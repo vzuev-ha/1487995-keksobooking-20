@@ -120,7 +120,7 @@
 
   function onMapFilterChange() {
     // Закроем открытую карточку
-    window.kbMap.toggleCards();
+    window.kbMap.showCard();
 
     var ApartmentsJSON = window.kbMap.globalApartmentsJSON.filter(function (it) {
       return isPinAvailable(it);
