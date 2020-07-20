@@ -16,7 +16,7 @@
 
 
   /**
-   * Деактивация страницы
+   * Деактивация страницы. Используется локально.
    */
   function deactivatePage() {
     window.kbForm.switchAdFormControlsAccess(false);
@@ -24,7 +24,46 @@
   }
 
 
+  /**
+   * Сброс и деактивация страницы. Используется извне.
+   */
+  function resetAndDeactivatePage() {
+    window.kbMap.reloadMapData([]);
+
+    var adForm = window.kbForm.adForm;
+    adForm.reset();
+    var mapFiltersForm = window.kbMap.mapFiltersForm;
+    mapFiltersForm.reset();
+
+    var mapPinMain = window.kbMap.mapPinMain;
+    mapPinMain.style.left = window.kbConstants.MAP_PIN_MAIN_LEFT_TOP_COORDS.x + 'px';
+    mapPinMain.style.top = window.kbConstants.MAP_PIN_MAIN_LEFT_TOP_COORDS.y + 'px';
+
+    document.querySelector(window.kbConstants.AVATAR_PREVIEW_CLASS).src = window.kbConstants.AVATAR_DEFAULT_IMAGE_SRC;
+    document.querySelector(window.kbConstants.PHOTO_PREVIEW_CLASS).src = '';
+
+    // Поскольку штатный reset срабатывает в конце обработчика, надо заполнить адрес с задержкой,
+    //   иначе он тоже почистится
+    window.setTimeout(function () {
+      window.kbMap.fillAddressFromPinMain();
+    }, window.kbConstants.AD_FORM_RESET_TIMEOUT);
+
+    deactivatePage();
+  }
+
+
+  /**
+   * Глобальный обработчик Escape
+   * @param {*} evt Событие
+   * @listens {event} evt Событие
+   */
   function onDocumentEscapeKeyDown(evt) {
+    // Критерий Б26 требует, чтобы обработчики создавались и удалялись.
+    //   Если следовать критерию, этот обработчик нужно распилить на три штуки
+    //   и разнести в модули card и messages.
+    //   Но тогда код, принадлежащий основной странице, становится рассредоточенным,
+    //   и его тяжелее обслуживать (искать все обработчики document по разным файлам).
+
     if (evt.key === 'Escape') {
       evt.preventDefault();
 
@@ -44,13 +83,15 @@
   }
 
 
+  //
   // Инициализация
+  //
 
   // Деактивируем страницу
   deactivatePage();
 
+
   // Навесим событие на главный Pin
-  // window.kbMap.mapPinMain.addEventListener('click', window.kbMap.onMapPinMainClick);
   window.kbMap.mapPinMain.addEventListener('mousedown', window.kbMover.onMapPinMainMouseDown);
 
   // Заполним поле адреса координатами
@@ -102,9 +143,13 @@
   photoInput.dataset.preview = window.kbConstants.PHOTO_PREVIEW_CLASS;
 
 
+  //
+  // Экспорт
+  //
+
   window.main = {
     activatePage: activatePage,
-    deactivatePage: deactivatePage
+    resetAndDeactivatePage: resetAndDeactivatePage
   };
 
 })();

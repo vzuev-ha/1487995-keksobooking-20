@@ -138,11 +138,18 @@
     return card;
   }
 
+
+  //
   // Инициализация
+  //
 
   var cardTemplate = document.querySelector('#card').content
     .querySelector('.map__card');
 
+
+  //
+  // Экспорт
+  //
 
   window.kbCard = {
     generateCardFromTemplate: generateCardFromTemplate

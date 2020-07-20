@@ -62,6 +62,11 @@
   }
 
 
+  /**
+   * Проверка, должен ли переданные pin отображаться на карте с учетом активных фильтров
+   * @param {Object} it Проверяемый pin
+   * @return {boolean}
+   */
   function isPinAvailable(it) {
     var housingType = window.kbMap.mapFiltersContainer.querySelector('#housing-type').value;
     var isHousingType = (housingType && housingType !== 'any') ? (it.offer.type === housingType) : true;
@@ -118,10 +123,11 @@
   }
 
 
+  /**
+   * Обработчик изменения формы фильтрации. Единый, навешивается на родителя фильтров
+   * @listens {event} evt Событие
+   */
   function onMapFilterChange() {
-    // Закроем открытую карточку
-    window.kbMap.showCard();
-
     var ApartmentsJSON = window.kbMap.globalApartmentsJSON.filter(function (it) {
       return isPinAvailable(it);
     });
@@ -142,10 +148,13 @@
   }
 
 
+  /**
+   * Включает/выключает фильтр меток на карте
+   * @param {boolean} isActivate
+   */
   function switchMapFiltersAccess(isActivate) {
-    var mapControl = document.querySelector('.map');
-    var mapFiltersContainer = document.querySelector('.map__filters-container');
-    var mapFilters = mapFiltersContainer.querySelectorAll('select, fieldset');
+    var mapControl = window.kbMap.mapControl;
+    var mapFilters = window.kbMap.mapFilters;
 
     // Установим соответствующее состояние полям ввода
     switchControlsAccess(mapFilters, isActivate);
@@ -158,10 +167,12 @@
     }
   }
 
-  function switchAdFormControlsAccess(isActivate) {
-    var adForm = document.querySelector('.ad-form');
-    var adFormFieldSets = adForm.querySelectorAll('fieldset');
 
+  /**
+   * Включает/выключает форму создания объявления
+   * @param {boolean} isActivate
+   */
+  function switchAdFormControlsAccess(isActivate) {
     // Установим соответствующее состояние полям ввода
     switchControlsAccess(adFormFieldSets, isActivate);
 
@@ -173,6 +184,12 @@
     }
   }
 
+
+  /**
+   * Обработчик события submit - отправки формы
+   * @param {*} evt Событие
+   * @listens {event} evt Событие
+   */
   function onAdFormSubmit(evt) {
     evt.preventDefault();
 
@@ -184,35 +201,40 @@
   }
 
 
+  /**
+   * Действие в случае успеха отправки формы на сервер
+   */
   function submitSuccess() {
-    window.kbMap.reloadMapData([]);
-
-    adForm.reset();
-    window.main.deactivatePage();
+    window.main.resetAndDeactivatePage();
 
     window.kbMessages.successMessage();
   }
 
 
+  /**
+   * Обработчик события reset - сброса формы
+   * @listens {event} evt Событие
+   */
   function onAdFormReset() {
-    // evt.preventDefault();
-    // adForm.reset(); Почему-то этот вызов не срабатывает, хотя в submit работает нормально/
-    //   Поэтому делаем через SetTimeout, чтобы доплнительные действия сработали после штатных
-
-    window.setTimeout(function () {
-      window.kbMap.fillAddressFromPinMain();
-      document.querySelector(window.kbConstants.AVATAR_PREVIEW_CLASS).src = window.kbConstants.AVATAR_DEFAULT_IMAGE_SRC;
-      document.querySelector(window.kbConstants.PHOTO_PREVIEW_CLASS).src = '';
-    }, window.kbConstants.AD_FORM_RESET_TIMEOUT);
+    window.main.resetAndDeactivatePage();
   }
 
 
+  //
   // Инициализация
+  //
+
   // Найдем форму создания объявления и экспортируем ее
   var adForm = document.querySelector('.ad-form');
 
+  var adFormFieldSets = adForm.querySelectorAll('fieldset');
+
   var addressField = adForm.querySelector('#address');
 
+
+  //
+  // Экспорт
+  //
 
   window.kbForm = {
     adForm: adForm,

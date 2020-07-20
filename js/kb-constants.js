@@ -18,10 +18,10 @@
 
   var APARTMENT_TYPE_MIN_PRICES = [0, 1000, 5000, 10000];
 
-  var X_MIN = 0; // 50;
-  var X_MAX = document.querySelector('.map').clientWidth; // 1100;
-  var Y_MIN = 130;
-  var Y_MAX = 630;
+  var PIN_X_MIN = 0; // 50;
+  var PIN_X_MAX = document.querySelector('.map').clientWidth; // 1100;
+  var PIN_Y_MIN = 130;
+  var PIN_Y_MAX = 630;
 
   var PRICE_MIN = 8000;
   var PRICE_MAX = 60000;
@@ -65,6 +65,22 @@
   var DEBOUNCE_INTERVAL = 500; // ms
 
 
+  var MAP_PIN_MAIN_LEFT_TOP_COORDS = {
+    x: document.querySelector('.map__pin--main').offsetLeft,
+    y: document.querySelector('.map__pin--main').offsetTop
+  };
+
+  // Захардкодим размеры меток. Не очень хорошо, но в момент их создания мы не можем получить их размеры.
+  var PIN_DIMENSIONS = {
+    width: 50,
+    height: 70
+  };
+
+
+  //
+  // Экспорт
+  //
+
   window.kbConstants = {
     PINS_COUNT: MAX_PINS_COUNT,
 
@@ -75,10 +91,10 @@
 
     APARTMENT_TYPE_MIN_PRICES: APARTMENT_TYPE_MIN_PRICES,
 
-    X_MIN: X_MIN,
-    X_MAX: X_MAX,
-    Y_MIN: Y_MIN,
-    Y_MAX: Y_MAX,
+    PIN_X_MIN: PIN_X_MIN,
+    PIN_X_MAX: PIN_X_MAX,
+    PIN_Y_MIN: PIN_Y_MIN,
+    PIN_Y_MAX: PIN_Y_MAX,
 
     PRICE_MIN: PRICE_MIN,
     PRICE_MAX: PRICE_MAX,
@@ -98,6 +114,7 @@
     ROOMS_VALUE: ROOMS_VALUE,
 
 
+    // Служебные константы
     AD_FORM_RESET_TIMEOUT: AD_FORM_RESET_TIMEOUT,
 
     AVATAR_PREVIEW_CLASS: AVATAR_PREVIEW_CLASS,
@@ -111,7 +128,11 @@
     BACKEND_STATUS_CODE: BACKEND_STATUS_CODE,
     BACKEND_TIMEOUT_IN_MS: BACKEND_TIMEOUT_IN_MS,
 
-    DEBOUNCE_INTERVAL: DEBOUNCE_INTERVAL
+    DEBOUNCE_INTERVAL: DEBOUNCE_INTERVAL,
+
+
+    MAP_PIN_MAIN_LEFT_TOP_COORDS: MAP_PIN_MAIN_LEFT_TOP_COORDS,
+    PIN_DIMENSIONS: PIN_DIMENSIONS
   };
 
 })();

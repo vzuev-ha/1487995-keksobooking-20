@@ -1,6 +1,11 @@
 'use strict';
 (function () {
 
+  /**
+   * Обработчик перемещения главной метки
+   * @param {*} evt Событие
+   * @listens {event} evt Событие
+   */
   function onMapPinMainMouseDown(evt) {
     if (typeof evt !== 'object' || evt.button !== 0) {
       return;
@@ -9,15 +14,18 @@
     evt.preventDefault();
 
     // Активировать страницу, если она не была активирована
-    if (window.kbMap.mapElement.classList.contains('map--faded')) {
+    if (window.kbMap.mapControl.classList.contains('map--faded')) {
       window.main.activatePage();
     }
 
+    // Снять выделение с меток
+    window.kbMap.activatePin();
     // Скрыть карточки объявлений, если они были видны
     window.kbMap.showCard();
 
 
     var mapPinMain = window.kbMap.mapPinMain;
+    mapPinMain.focus();
 
     var startCoords = {
       x: evt.clientX,
@@ -48,15 +56,23 @@
       var mapPinMainLeft = mapPinMain.offsetLeft - shift.x;
       var mapPinMainTop = mapPinMain.offsetTop - shift.y;
 
-      mapPinMainLeft = Math.max(mapPinMainLeft,
-          window.kbConstants.X_MIN - window.kbConstants.MAP_PIN_MAIN_TAIL_OFFSET.offsetX);
-      mapPinMainLeft = Math.min(mapPinMainLeft,
-          window.kbConstants.X_MAX - window.kbConstants.MAP_PIN_MAIN_TAIL_OFFSET.offsetX);
+      mapPinMainLeft = Math.max(
+          mapPinMainLeft,
+          window.kbConstants.PIN_X_MIN - window.kbConstants.MAP_PIN_MAIN_TAIL_OFFSET.offsetX
+      );
+      mapPinMainLeft = Math.min(
+          mapPinMainLeft,
+          window.kbConstants.PIN_X_MAX - window.kbConstants.MAP_PIN_MAIN_TAIL_OFFSET.offsetX
+      );
 
-      mapPinMainTop = Math.max(mapPinMainTop,
-          window.kbConstants.Y_MIN - window.kbConstants.MAP_PIN_MAIN_TAIL_OFFSET.offsetY);
-      mapPinMainTop = Math.min(mapPinMainTop,
-          window.kbConstants.Y_MAX - window.kbConstants.MAP_PIN_MAIN_TAIL_OFFSET.offsetY);
+      mapPinMainTop = Math.max(
+          mapPinMainTop,
+          window.kbConstants.PIN_Y_MIN - window.kbConstants.MAP_PIN_MAIN_TAIL_OFFSET.offsetY
+      );
+      mapPinMainTop = Math.min(
+          mapPinMainTop,
+          window.kbConstants.PIN_Y_MAX - window.kbConstants.MAP_PIN_MAIN_TAIL_OFFSET.offsetY
+      );
 
       mapPinMain.style.left = mapPinMainLeft + 'px';
       mapPinMain.style.top = mapPinMainTop + 'px';
@@ -85,6 +101,10 @@
     document.addEventListener('mouseup', onMouseUp);
   }
 
+
+  //
+  // Экспорт
+  //
 
   window.kbMover = {
     onMapPinMainMouseDown: onMapPinMainMouseDown

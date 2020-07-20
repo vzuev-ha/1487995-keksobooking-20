@@ -2,6 +2,11 @@
 
 (function () {
 
+  /**
+   * Обработчик выбора файла
+   * @param {*} evt Событие
+   * @listens {event} evt Событие
+   */
   function onFileChooserChange(evt) {
     var file = evt.target.files[0];
     var fileName = file.name.toLowerCase();
@@ -21,6 +26,10 @@
     }
   }
 
+
+  //
+  // Экспорт
+  //
 
   window.kbFiles = {
     onFileChooserChange: onFileChooserChange

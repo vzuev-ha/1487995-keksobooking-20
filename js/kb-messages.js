@@ -2,6 +2,10 @@
 
 (function () {
 
+  /**
+   * Показывает сообщение об успехе отправки данных на сервер
+   * @param {string} message
+   */
   function successMessage(message) {
     var successDialog = document.querySelector('#success').content
       .querySelector('.success')
@@ -20,6 +24,10 @@
   }
 
 
+  /**
+   * Показывает собщение об ошибке отправки даных на сервер или ошибке загрузки объявлений
+   * @param {string} message
+   */
   function errorMessage(message) {
     var errorDialog = document.querySelector('#error').content
       .querySelector('.error')
@@ -37,6 +45,10 @@
     document.querySelector('main').appendChild(errorDialog);
   }
 
+
+  //
+  // Экспорт
+  //
 
   window.kbMessages = {
     successMessage: successMessage,
