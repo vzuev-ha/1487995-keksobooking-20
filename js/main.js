@@ -87,7 +87,18 @@
 
 
   // Навесим обработчик на нажатие кнопки Отправить
-  window.kbForm.adForm.addEventListener('submit', window.kbForm.onAdFormSubmit);
+  // window.kbForm.adForm.addEventListener('submit', window.kbForm.onAdFormSubmit);
+
+
+  // Навесим обработчик на выбор аватарки
+  var avatarInput = window.kbForm.adForm.querySelector('.ad-form-header__input');
+  avatarInput.addEventListener('change', window.kbFiles.onFileChooserChange);
+  avatarInput.dataset.preview = '.ad-form-header__preview img';
+
+  // Навесим обработчик на загрузку фото жилья
+  var photoInput = window.kbForm.adForm.querySelector('.ad-form__input');
+  photoInput.addEventListener('change', window.kbFiles.onFileChooserChange);
+  photoInput.dataset.preview = '.ad-form__photo img';
 
 
   window.main = {
