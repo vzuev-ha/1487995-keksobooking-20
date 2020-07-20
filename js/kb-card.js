@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+
   /**
    * Создание HTML-ноды "Карточка" из объекта размещения на основе шаблона
    * @param {{offer: {features: [], rooms: number, address: string, checkin: string, price: number, guests: number, description: string, title: string, type: string, checkout: string, photos: []}, author: {avatar: string}, location: {x: number, y: number}}} apartmentObject Объект размещения

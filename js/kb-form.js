@@ -174,13 +174,13 @@
   }
 
   function onAdFormSubmit(evt) {
+    evt.preventDefault();
+
     window.kbBackend.submitData(
         new FormData(adForm),
         submitSuccess,
         window.kbMessages.errorMessage
     );
-
-    evt.preventDefault();
   }
 
 
@@ -194,11 +194,25 @@
   }
 
 
+  function onAdFormReset() {
+    // evt.preventDefault();
+    // adForm.reset(); Почему-то этот вызов не срабатывает, хотя в submit работает нормально/
+    //   Поэтому делаем через SetTimeout, чтобы доплнительные действия сработали после штатных
+
+    window.setTimeout(function () {
+      window.kbMap.fillAddressFromPinMain();
+      document.querySelector(window.kbConstants.AVATAR_PREVIEW_CLASS).src = window.kbConstants.AVATAR_DEFAULT_IMAGE_SRC;
+      document.querySelector(window.kbConstants.PHOTO_PREVIEW_CLASS).src = '';
+    }, window.kbConstants.AD_FORM_RESET_TIMEOUT);
+  }
+
+
   // Инициализация
   // Найдем форму создания объявления и экспортируем ее
   var adForm = document.querySelector('.ad-form');
 
   var addressField = adForm.querySelector('#address');
+
 
   window.kbForm = {
     adForm: adForm,
@@ -211,7 +225,8 @@
 
     onMapFilterChange: onMapFilterChange,
 
-    onAdFormSubmit: onAdFormSubmit
+    onAdFormSubmit: onAdFormSubmit,
+    onAdFormReset: onAdFormReset
   };
 
 })();

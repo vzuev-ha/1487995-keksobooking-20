@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+
   /**
    * Создание HTML-ноды "Метка" из объекта размещения на основе шаблона
    * @param {Object} apartmentObject Объект размещения

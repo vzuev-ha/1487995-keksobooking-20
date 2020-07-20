@@ -179,6 +179,7 @@
   // Элемент, перед которым нужно вставить блок карточек
   var mapFiltersContainer = document.querySelector('.map__filters-container');
 
+
   window.kbMap = {
     globalApartmentsJSON: globalApartmentsJSON,
     mapElement: mapElement,

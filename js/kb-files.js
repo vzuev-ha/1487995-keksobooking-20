@@ -1,13 +1,12 @@
 'use strict';
 
 (function () {
-  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
   function onFileChooserChange(evt) {
     var file = evt.target.files[0];
     var fileName = file.name.toLowerCase();
 
-    var matches = FILE_TYPES.some(function (it) {
+    var matches = window.kbConstants.IMAGE_FILE_TYPES.some(function (it) {
       return fileName.endsWith(it);
     });
 

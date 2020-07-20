@@ -85,6 +85,7 @@
     document.addEventListener('mouseup', onMouseUp);
   }
 
+
   window.kbMover = {
     onMapPinMainMouseDown: onMapPinMainMouseDown
   };

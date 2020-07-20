@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var DEBOUNCE_INTERVAL = 500; // ms
 
   // Оптимизированная функция устранения дребезга
   //   в отличие от примера в демонстрации, сначала выполняет действие, а уже потом ждет.
@@ -14,7 +13,7 @@
 
         lastTimeout = window.setTimeout(function () {
           lastTimeout = null;
-        }, DEBOUNCE_INTERVAL);
+        }, window.kbConstants.DEBOUNCE_INTERVAL);
       }
     };
   }
@@ -31,7 +30,7 @@
       }
       lastTimeout = window.setTimeout(function () {
         cb.apply(null, parameters);
-      }, DEBOUNCE_INTERVAL);
+      }, window.kbConstants.DEBOUNCE_INTERVAL);
     };
   }
 
@@ -43,7 +42,7 @@
     if (lastTimeout) {
       window.clearTimeout(lastTimeout);
     }
-    lastTimeout = window.setTimeout(cb, DEBOUNCE_INTERVAL);
+    lastTimeout = window.setTimeout(cb, window.kbConstants.DEBOUNCE_INTERVAL);
   }
 
   window.kbDebouncer = {

@@ -46,6 +46,25 @@
   ];
 
 
+  // Служебные константы
+  var AD_FORM_RESET_TIMEOUT = 200;
+
+  var AVATAR_PREVIEW_CLASS = '.ad-form-header__preview img';
+  var PHOTO_PREVIEW_CLASS = '.ad-form__photo img';
+  var AVATAR_DEFAULT_IMAGE_SRC = document.querySelector(AVATAR_PREVIEW_CLASS).src;
+
+  var IMAGE_FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+
+  var BACKEND_SUBMIT_URL = 'https://javascript.pages.academy/keksobooking';
+  var BACKEND_DATA_URL = 'https://javascript.pages.academy/keksobooking/data';
+  var BACKEND_STATUS_CODE = {
+    OK: 200
+  };
+  var BACKEND_TIMEOUT_IN_MS = 10000;
+
+  var DEBOUNCE_INTERVAL = 500; // ms
+
+
   window.kbConstants = {
     PINS_COUNT: MAX_PINS_COUNT,
 
@@ -76,7 +95,23 @@
 
     ROOMS_KEY: ROOMS_KEY,
 
-    ROOMS_VALUE: ROOMS_VALUE
+    ROOMS_VALUE: ROOMS_VALUE,
+
+
+    AD_FORM_RESET_TIMEOUT: AD_FORM_RESET_TIMEOUT,
+
+    AVATAR_PREVIEW_CLASS: AVATAR_PREVIEW_CLASS,
+    PHOTO_PREVIEW_CLASS: PHOTO_PREVIEW_CLASS,
+    AVATAR_DEFAULT_IMAGE_SRC: AVATAR_DEFAULT_IMAGE_SRC,
+
+    IMAGE_FILE_TYPES: IMAGE_FILE_TYPES,
+
+    BACKEND_SUBMIT_URL: BACKEND_SUBMIT_URL,
+    BACKEND_DATA_URL: BACKEND_DATA_URL,
+    BACKEND_STATUS_CODE: BACKEND_STATUS_CODE,
+    BACKEND_TIMEOUT_IN_MS: BACKEND_TIMEOUT_IN_MS,
+
+    DEBOUNCE_INTERVAL: DEBOUNCE_INTERVAL
   };
 
 })();
