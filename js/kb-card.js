@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+
   /**
    * Создание HTML-ноды "Карточка" из объекта размещения на основе шаблона
    * @param {{offer: {features: [], rooms: number, address: string, checkin: string, price: number, guests: number, description: string, title: string, type: string, checkout: string, photos: []}, author: {avatar: string}, location: {x: number, y: number}}} apartmentObject Объект размещения
@@ -31,14 +32,13 @@
 
     // Тип жилья
     var type = card.querySelector('.popup__type');
-    if (apartmentObject.offer.type) {
-      var typeIndex = window.kbConstants.APARTMENT_TYPES.indexOf(apartmentObject.offer.type);
+    // Как и c другими блоками, нам необходимо скрыть этот блок, если apartmentObject.offer.type отсутствует.
+    // Но в данном случае indexOf вернет -1, если параметр не определен, так что отдельная проверка не нужна.
+    // Хотя это и снижает восприятие кода, без этого коммента читателю придется догадываться о наличии этой логики...
+    var typeIndex = window.kbConstants.APARTMENT_TYPES.indexOf(apartmentObject.offer.type);
 
-      if (typeIndex >= 0) {
-        type.textContent = window.kbConstants.APARTMENT_TYPES_RUS[typeIndex];
-      } else {
-        type.classList.add('hidden');
-      }
+    if (typeIndex >= 0) {
+      type.textContent = window.kbConstants.APARTMENT_TYPES_RUS[typeIndex];
     } else {
       type.classList.add('hidden');
     }
@@ -49,12 +49,12 @@
 
     if (apartmentObject.offer.rooms) {
       capacityText = apartmentObject.offer.rooms + ' ' + window.kbUtilsEndings
-        .endOfNum(apartmentObject.offer.rooms, ['комната', 'комнаты', 'комнат']);
+        .endOfNum(apartmentObject.offer.rooms, window.kbConstants.PLURAL_ENDINGS_ROOM);
     }
 
     if (apartmentObject.offer.guests) {
       capacityText += ' для ' + apartmentObject.offer.guests + ' ' + window.kbUtilsEndings
-        .endOfNum(apartmentObject.offer.guests, ['гостя', 'гостей', 'гостей']);
+        .endOfNum(apartmentObject.offer.guests, window.kbConstants.PLURAL_ENDINGS_GUEST);
     }
 
     if (capacityText !== '') {
@@ -131,17 +131,24 @@
     if (apartmentObject.author.avatar) {
       avatar.src = apartmentObject.author.avatar;
     } else {
-      avatar.src = 'img/avatars/default.png';
+      avatar.src = window.kbConstants.USER_DEFAULT_IMAGE_SRC;
     }
 
     return card;
   }
 
+
+  //
   // Инициализация
+  //
 
   var cardTemplate = document.querySelector('#card').content
     .querySelector('.map__card');
 
+
+  //
+  // Экспорт
+  //
 
   window.kbCard = {
     generateCardFromTemplate: generateCardFromTemplate

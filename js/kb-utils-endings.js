@@ -11,6 +11,8 @@
   function endOfNum(n, titles) {
     /* Было вот так красивенько, но зануда npm test говорит, что "Do not nest ternary expressions"
        Значит, сделаем некрасиво, а это оставим на память.
+
+       Это библиотека, а не основная программа, поэтому не надо ее резать по критерию Б13 ;)
     return titles[(n % 10 === 1 && n % 100 !== 11)
       ? 0
       : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20))
@@ -28,6 +30,11 @@
 
     return titles[2];
   }
+
+
+  //
+  // Экспорт
+  //
 
   window.kbUtilsEndings = {
     endOfNum: endOfNum

@@ -1,33 +1,19 @@
 'use strict';
 
 (function () {
-  // var responseURL = 'https://javascript.pages.academy/code-and-magick';
 
-  var dataURL = 'https://javascript.pages.academy/keksobooking/data';
-
-  var StatusCode = {
-    OK: 200
-  };
-  var TIMEOUT_IN_MS = 10000;
-
-  function networkErrorHandler(errorMessage) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
-    node.style.position = 'absolute';
-    node.style.left = '0';
-    node.style.right = '0';
-    node.style.fontSize = '30px';
-
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
-  }
-
+  /**
+   * Подготовка HTTP-запроса
+   * @param {function(Array)} onSuccess Функция, выполняемая в случае успеха
+   * @param {function(string)} onError Функция, выполняемая в случае неудачи
+   * @return {XMLHttpRequest} Подготовленный объект Запрос
+   */
   function prepareXMLHttpRequest(onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === StatusCode.OK) {
+      if (xhr.status === window.kbConstants.BACKEND_STATUS_CODES.OK) {
         onSuccess(xhr.response);
       } else {
         onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
@@ -40,38 +26,54 @@
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
 
-    xhr.timeout = TIMEOUT_IN_MS;
+    xhr.timeout = window.kbConstants.BACKEND_TIMEOUT_IN_MS;
 
     return xhr;
   }
 
+
+  /**
+   * Загрузка массива данных с внешнего сервера
+   * @param {function(Array)} onSuccess Функция, выполняемая в случае успеха
+   * @param {function(string)} onError Функция, выполняемая в случае неудачи
+   */
   function loadData(onSuccess, onError) {
     var xhr = prepareXMLHttpRequest(onSuccess, onError);
 
     try {
-      xhr.open('GET', dataURL);
+      xhr.open(window.kbConstants.BACKEND_HTTP_METHODS.GET, window.kbConstants.BACKEND_DATA_URL);
       xhr.send();
-    } catch (e) {
-      onError(e.message);
+    } catch (err) {
+      onError(err.message);
     }
   }
 
-  /*
+
+  /**
+   * Отправка данных формы на внешний сервер
+   * @param {FormData} data Данные формы для отправки
+   * @param {function(Array)} onSuccess Функция, выполняемая в случае успеха
+   * @param {function(string)} onError Функция, выполняемая в случае неудачи
+   */
   function submitData(data, onSuccess, onError) {
     var xhr = prepareXMLHttpRequest(onSuccess, onError);
 
     try {
-      xhr.open('POST', responseURL);
+      xhr.open(window.kbConstants.BACKEND_HTTP_METHODS.POST, window.kbConstants.BACKEND_SUBMIT_URL);
       xhr.send(data);
-    } catch (e) {
-      onError(e.message);
+    } catch (err) {
+      onError(err.message);
     }
-  }*/
+  }
 
+
+  //
+  // Экспорт
+  //
 
   window.kbBackend = {
     loadData: loadData,
-    networkErrorHandler: networkErrorHandler
+    submitData: submitData
   };
 
 })();

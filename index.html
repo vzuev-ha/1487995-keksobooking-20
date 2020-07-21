@@ -2,6 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
@@ -187,12 +188,14 @@
                      accept="image/*">
               <label for="images" class="ad-form__drop-zone">Загрузить<br>фото...</label>
             </div>
-            <div class="ad-form__photo"></div>
+            <div class="ad-form__photo">
+              <img src="" width="60px">
+            </div>
           </div>
         </fieldset>
         <fieldset class="ad-form__element ad-form__element--submit">
           <button class="ad-form__submit" type="submit">Опубликовать</button>
-          или <button class="ad-form__reset" type="reset">очистить</button>
+          или <button class="ad-form__reset" type="button">очистить</button>
         </fieldset>
       </form>
     </section>
@@ -261,12 +264,16 @@
 
   <script src="js/kb-constants.js"></script>
   <script src="js/kb-utils-endings.js"></script>
+  <script src="js/kb-messages.js"></script>
+  <script src="js/kb-debouncer.js"></script>
+  <script src="js/kb-mover.js"></script>
 
   <script src="js/kb-pin.js"></script>
   <script src="js/kb-card.js"></script>
   <script src="js/kb-map.js"></script>
   <script src="js/kb-form.js"></script>
   <script src="js/kb-backend.js"></script>
+  <script src="js/kb-files.js"></script>
 
   <script src="js/main.js"></script>
 
