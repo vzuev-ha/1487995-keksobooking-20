@@ -45,20 +45,29 @@
     {guests: [0], message: 'Выбранный вариант размещения - не для гостей!'}
   ];
 
+  var PLURAL_ENDINGS_ROOM = ['комната', 'комнаты', 'комнат'];
+  var PLURAL_ENDINGS_GUEST = ['гостя', 'гостей', 'гостей'];
+
 
   // Служебные константы
   var AVATAR_PREVIEW_CLASS = '.ad-form-header__preview img';
   var PHOTO_PREVIEW_CLASS = '.ad-form__photo img';
   var AVATAR_DEFAULT_IMAGE_SRC = document.querySelector(AVATAR_PREVIEW_CLASS).src;
 
+  var USER_DEFAULT_IMAGE_SRC = 'img/avatars/default.png';
+
   var IMAGE_FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
   var BACKEND_SUBMIT_URL = 'https://javascript.pages.academy/keksobooking';
   var BACKEND_DATA_URL = 'https://javascript.pages.academy/keksobooking/data';
-  var BACKEND_STATUS_CODE = {
+  var BACKEND_STATUS_CODES = {
     OK: 200
   };
   var BACKEND_TIMEOUT_IN_MS = 10000;
+  var BACKEND_HTTP_METHODS = {
+    GET: 'GET',
+    POST: 'POST'
+  };
 
   var DEBOUNCE_INTERVAL = 500; // ms
 
@@ -111,18 +120,24 @@
 
     ROOMS_VALUE: ROOMS_VALUE,
 
+    PLURAL_ENDINGS_ROOM: PLURAL_ENDINGS_ROOM,
+    PLURAL_ENDINGS_GUEST: PLURAL_ENDINGS_GUEST,
+
 
     // Служебные константы
     AVATAR_PREVIEW_CLASS: AVATAR_PREVIEW_CLASS,
     PHOTO_PREVIEW_CLASS: PHOTO_PREVIEW_CLASS,
     AVATAR_DEFAULT_IMAGE_SRC: AVATAR_DEFAULT_IMAGE_SRC,
 
+    USER_DEFAULT_IMAGE_SRC: USER_DEFAULT_IMAGE_SRC,
+
     IMAGE_FILE_TYPES: IMAGE_FILE_TYPES,
 
     BACKEND_SUBMIT_URL: BACKEND_SUBMIT_URL,
     BACKEND_DATA_URL: BACKEND_DATA_URL,
-    BACKEND_STATUS_CODE: BACKEND_STATUS_CODE,
+    BACKEND_STATUS_CODES: BACKEND_STATUS_CODES,
     BACKEND_TIMEOUT_IN_MS: BACKEND_TIMEOUT_IN_MS,
+    BACKEND_HTTP_METHODS: BACKEND_HTTP_METHODS,
 
     DEBOUNCE_INTERVAL: DEBOUNCE_INTERVAL,
 
