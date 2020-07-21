@@ -212,10 +212,10 @@
 
 
   /**
-   * Обработчик события reset - сброса формы
+   * Обработчик нажатия на кнопку reset - ручной сброс формы
    * @listens {event} evt Событие
    */
-  function onAdFormReset() {
+  function onAdFormResetClick() {
     window.main.resetAndDeactivatePage();
   }
 
@@ -231,6 +231,12 @@
 
   var addressField = adForm.querySelector('#address');
 
+  // При инициализации и сбросе формы нам нужно обновить placeholder у поля Цена
+  //   Для этого мы будем вызывать change у поля Тим жилья, которое, в свою очередь,
+  //   установит нужный placeholder в Цену
+  // Для этого запомним и экспортируем ссылку на Тип жилья
+  var offerTypeInput = adForm.querySelector('#type');
+
 
   //
   // Экспорт
@@ -240,6 +246,8 @@
     adForm: adForm,
     addressField: addressField,
 
+    offerTypeInput: offerTypeInput,
+
     onAdFormChange: onAdFormChange,
     changeCapacityValidity: changeCapacityValidity,
     switchMapFiltersAccess: switchMapFiltersAccess,
@@ -248,7 +256,7 @@
     onMapFilterChange: onMapFilterChange,
 
     onAdFormSubmit: onAdFormSubmit,
-    onAdFormReset: onAdFormReset
+    onAdFormResetClick: onAdFormResetClick
   };
 
 })();

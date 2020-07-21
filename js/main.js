@@ -35,20 +35,24 @@
     var mapFiltersForm = window.kbMap.mapFiltersForm;
     mapFiltersForm.reset();
 
+    // Вернем главную метку на место
     var mapPinMain = window.kbMap.mapPinMain;
     mapPinMain.style.left = window.kbConstants.MAP_PIN_MAIN_LEFT_TOP_COORDS.x + 'px';
     mapPinMain.style.top = window.kbConstants.MAP_PIN_MAIN_LEFT_TOP_COORDS.y + 'px';
 
+    // Сбросим фотографии
     document.querySelector(window.kbConstants.AVATAR_PREVIEW_CLASS).src = window.kbConstants.AVATAR_DEFAULT_IMAGE_SRC;
     document.querySelector(window.kbConstants.PHOTO_PREVIEW_CLASS).src = '';
 
-    // Поскольку штатный reset срабатывает в конце обработчика, надо заполнить адрес с задержкой,
-    //   иначе он тоже почистится
-    window.setTimeout(function () {
-      window.kbMap.fillAddressFromPinMain();
-    }, window.kbConstants.AD_FORM_RESET_TIMEOUT);
+    // Так как Тип жилья по умолчанию у нас указана квартира,
+    //   при очистке нужно вызвать событие, чтобы значение placeholder изменилось на корректное
+    window.kbForm.offerTypeInput.dispatchEvent(new Event('change'));
 
+    // После того, как вернули все контролы в исходное состояние, деактивируем их и всю страницу
     deactivatePage();
+
+    // После деактивации (когда Главный pin снова станет большим, обновим поле адреса
+    window.kbMap.fillAddressFromPinMain();
   }
 
 
@@ -109,10 +113,10 @@
   window.kbForm.adForm.querySelector('#timein').addEventListener('change', window.kbForm.onAdFormChange);
   window.kbForm.adForm.querySelector('#timeout').addEventListener('change', window.kbForm.onAdFormChange);
 
-  var typeInput = window.kbForm.adForm.querySelector('#type');
-  typeInput.addEventListener('change', window.kbForm.onAdFormChange);
+  window.kbForm.offerTypeInput.addEventListener('change', window.kbForm.onAdFormChange);
   // Так как по умолчанию у нас указана квартира, нужно вызвать событие, чтобы значение placeholder изменилось
-  typeInput.dispatchEvent(new Event('change'));
+  window.kbForm.offerTypeInput.dispatchEvent(new Event('change'));
+
 
   window.kbForm.adForm.querySelector('#room_number').addEventListener('change', window.kbForm.onAdFormChange);
   window.kbForm.adForm.querySelector('#capacity').addEventListener('change', window.kbForm.onAdFormChange);
@@ -127,9 +131,10 @@
   document.addEventListener('keydown', onDocumentEscapeKeyDown);
 
 
-  // Навесим обработчики на нажатие кнопки Отправить и Очистить
+  // Навесим обработчики на submit и нажатие кнопки Очистить
   window.kbForm.adForm.addEventListener('submit', window.kbForm.onAdFormSubmit);
-  window.kbForm.adForm.addEventListener('reset', window.kbForm.onAdFormReset);
+  window.kbForm.adForm.querySelector('.ad-form__reset')
+    .addEventListener('click', window.kbForm.onAdFormResetClick);
 
 
   // Навесим обработчик на выбор аватарки

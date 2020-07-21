@@ -47,8 +47,6 @@
 
 
   // Служебные константы
-  var AD_FORM_RESET_TIMEOUT = 200;
-
   var AVATAR_PREVIEW_CLASS = '.ad-form-header__preview img';
   var PHOTO_PREVIEW_CLASS = '.ad-form__photo img';
   var AVATAR_DEFAULT_IMAGE_SRC = document.querySelector(AVATAR_PREVIEW_CLASS).src;
@@ -115,8 +113,6 @@
 
 
     // Служебные константы
-    AD_FORM_RESET_TIMEOUT: AD_FORM_RESET_TIMEOUT,
-
     AVATAR_PREVIEW_CLASS: AVATAR_PREVIEW_CLASS,
     PHOTO_PREVIEW_CLASS: PHOTO_PREVIEW_CLASS,
     AVATAR_DEFAULT_IMAGE_SRC: AVATAR_DEFAULT_IMAGE_SRC,
