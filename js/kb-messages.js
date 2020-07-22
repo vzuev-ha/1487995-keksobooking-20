@@ -4,9 +4,9 @@
 
   /**
    * Показывает сообщение об успехе отправки данных на сервер
-   * @param {string} message
+   * @param {string} [message]
    */
-  function successMessage(message) {
+  function showSuccess(message) {
     var successDialog = document.querySelector('#success').content
       .querySelector('.success')
       .cloneNode(true);
@@ -26,9 +26,9 @@
 
   /**
    * Показывает собщение об ошибке отправки даных на сервер или ошибке загрузки объявлений
-   * @param {string} message
+   * @param {string} [message]
    */
-  function errorMessage(message) {
+  function showError(message) {
     var errorDialog = document.querySelector('#error').content
       .querySelector('.error')
       .cloneNode(true);
@@ -51,8 +51,8 @@
   //
 
   window.kbMessages = {
-    successMessage: successMessage,
-    errorMessage: errorMessage
+    showSuccess: showSuccess,
+    showError: showError
   };
 
 })();

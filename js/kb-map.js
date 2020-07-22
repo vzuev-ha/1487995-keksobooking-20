@@ -10,14 +10,14 @@
     // Создадим и заполним фрагмент
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < Math.min(window.kbConstants.PINS_COUNT, objectsJSON.length); i++) {
+    for (var i = 0; i < Math.min(window.kbConstants.MAX_PINS_COUNT, objectsJSON.length); i++) {
       // ТЗ, условие 5.2:  Если в объекте с описанием объявления отсутствует поле offer,
       //   то метка объявления не должна отображаться на карте.
       if (!objectsJSON[i].offer) {
         continue;
       }
 
-      var pin = window.kbPin.generatePinFromTemplate(objectsJSON[i]);
+      var pin = window.kbPin.generateFromTemplate(objectsJSON[i]);
       pin.dataset.index = i.toString();
       pin.addEventListener('click', onPinClick);
 
@@ -66,7 +66,7 @@
     // Создадим и заполним фрагмент
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < Math.min(window.kbConstants.PINS_COUNT, objectsJSON.length); i++) {
+    for (var i = 0; i < Math.min(window.kbConstants.MAX_PINS_COUNT, objectsJSON.length); i++) {
       // ТЗ, условие 5.2:  Если в объекте с описанием объявления отсутствует поле offer,
       //   то метка объявления не должна отображаться на карте.
       //   Значит, и карточка не должна существовать
@@ -74,7 +74,7 @@
         continue;
       }
 
-      var card = window.kbCard.generateCardFromTemplate(objectsJSON[i]);
+      var card = window.kbCard.generateFromTemplate(objectsJSON[i]);
       card.dataset.index = i.toString();
       card.classList.add('hidden');
 

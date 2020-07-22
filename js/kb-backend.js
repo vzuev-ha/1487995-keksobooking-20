@@ -13,7 +13,7 @@
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === window.kbConstants.BACKEND_STATUS_CODES.OK) {
+      if (xhr.status === window.kbConstants.BackendStatusCodes.OK) {
         onSuccess(xhr.response);
       } else {
         onError('Статус ответа: ' + xhr.status + ' ' + xhr.statusText);
@@ -41,7 +41,7 @@
     var xhr = prepareXMLHttpRequest(onSuccess, onError);
 
     try {
-      xhr.open(window.kbConstants.BACKEND_HTTP_METHODS.GET, window.kbConstants.BACKEND_DATA_URL);
+      xhr.open(window.kbConstants.BackendHTTPMethods.GET, window.kbConstants.BACKEND_DATA_URL);
       xhr.send();
     } catch (err) {
       onError(err.message);
@@ -59,7 +59,7 @@
     var xhr = prepareXMLHttpRequest(onSuccess, onError);
 
     try {
-      xhr.open(window.kbConstants.BACKEND_HTTP_METHODS.POST, window.kbConstants.BACKEND_SUBMIT_URL);
+      xhr.open(window.kbConstants.BackendHTTPMethods.POST, window.kbConstants.BACKEND_SUBMIT_URL);
       xhr.send(data);
     } catch (err) {
       onError(err.message);

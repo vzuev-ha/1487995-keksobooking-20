@@ -7,7 +7,7 @@
    * @param {Object} apartmentObject Объект размещения
    * @return {ActiveX.IXMLDOMNode | Node}
    */
-  function generatePinFromTemplate(apartmentObject) {
+  function generateFromTemplate(apartmentObject) {
     var pin = pinTemplate.cloneNode(true);
 
     var pinLeft = apartmentObject.location.x - Math.round(window.kbConstants.PIN_DIMENSIONS.width / 2);
@@ -34,7 +34,7 @@
   //
 
   window.kbPin = {
-    generatePinFromTemplate: generatePinFromTemplate
+    generateFromTemplate: generateFromTemplate
   };
 
 })();

@@ -1252,3 +1252,7 @@ fieldset {
 .hidden {
   display: none;
 }
+
+.pointer-events-disabled {
+  pointer-events: none;
+}

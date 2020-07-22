@@ -63,7 +63,7 @@
 
 
   /**
-   * Проверка, должен ли переданные pin отображаться на карте с учетом активных фильтров
+   * Проверка, должен ли переданный pin отображаться на карте с учетом активных фильтров
    * @param {Object} it Проверяемый pin
    * @return {boolean}
    */
@@ -128,9 +128,19 @@
    * @listens {event} evt Событие
    */
   function onMapFilterChange() {
-    var ApartmentsJSON = window.kbMap.globalApartmentsJSON.filter(function (it) {
-      return isPinAvailable(it);
-    });
+    // Поскольку по критерию Б23 мы должны остановить цикл, когда найдем нужное количество элементов,
+    //   мы вынуждены отказаться от красивого array.filter и использовать простой for
+    var ApartmentsJSON = [];
+
+    for (var i = 0; i < window.kbMap.globalApartmentsJSON.length; i++) {
+      if (isPinAvailable(window.kbMap.globalApartmentsJSON[i])) {
+        ApartmentsJSON.push(window.kbMap.globalApartmentsJSON[i]);
+      }
+
+      if (ApartmentsJSON.length === window.kbConstants.MAX_PINS_COUNT) {
+        break;
+      }
+    }
 
     window.kbMap.generatePinsAndCards(ApartmentsJSON);
   }
@@ -142,9 +152,9 @@
    * @param {boolean} isEnabled Доступен?
    */
   function switchControlsAccess(controlsArray, isEnabled) {
-    for (var i = 0; i < controlsArray.length - 1; i++) {
-      controlsArray[i].disabled = !isEnabled;
-    }
+    controlsArray.forEach(function (it) {
+      it.disabled = !isEnabled;
+    });
   }
 
 
@@ -155,6 +165,7 @@
   function switchMapFiltersAccess(isActivate) {
     var mapControl = window.kbMap.mapControl;
     var mapFilters = window.kbMap.mapFilters;
+    var mapFiltersContainer = window.kbMap.mapFiltersContainer;
 
     // Установим соответствующее состояние полям ввода
     switchControlsAccess(mapFilters, isActivate);
@@ -162,8 +173,10 @@
     // И покажем/скроем
     if (isActivate) {
       mapControl.classList.remove('map--faded');
+      mapFiltersContainer.classList.remove('pointer-events-disabled');
     } else {
       mapControl.classList.add('map--faded');
+      mapFiltersContainer.classList.add('pointer-events-disabled');
     }
   }
 
@@ -176,11 +189,13 @@
     // Установим соответствующее состояние полям ввода
     switchControlsAccess(adFormFieldSets, isActivate);
 
-    // И покажем/скроем
+    // И заблокируем/разблокируем форму и ее кнопки
     if (isActivate) {
       adForm.classList.remove('ad-form--disabled');
+      adForm.classList.remove('pointer-events-disabled');
     } else {
       adForm.classList.add('ad-form--disabled');
+      adForm.classList.add('pointer-events-disabled');
     }
   }
 
@@ -196,7 +211,7 @@
     window.kbBackend.submitData(
         new FormData(adForm),
         submitSuccess,
-        window.kbMessages.errorMessage
+        window.kbMessages.showError
     );
   }
 
@@ -207,7 +222,7 @@
   function submitSuccess() {
     window.main.resetAndDeactivatePage();
 
-    window.kbMessages.successMessage();
+    window.kbMessages.showSuccess();
   }
 
 
@@ -236,6 +251,10 @@
   //   установит нужный placeholder в Цену
   // Для этого запомним и экспортируем ссылку на Тип жилья
   var offerTypeInput = adForm.querySelector('#type');
+
+  var adFormSubmitButton = adForm.querySelector('.ad-form__submit');
+  var adFormResetButton = adForm.querySelector('.ad-form__reset');
+
 
 
   //

@@ -10,7 +10,7 @@
     // Только после загрузки меток покажем фильтры на карте (см reloadMapData)!
     window.kbBackend.loadData(
         window.kbMap.reloadMapData,
-        window.kbMessages.errorMessage
+        window.kbMessages.showError
     );
   }
 
@@ -106,7 +106,7 @@
   //   Навешиваем на саму форму, так как мы все равно опрашиваем все input-ы
   // И еще воспользуемся приемом для устрания дребезка при обновлении фильтра
   window.kbMap.mapFiltersContainer.addEventListener('change',
-      window.kbDebouncer.debounceEnclosed(window.kbForm.onMapFilterChange));
+      window.kbDebouncer.doEnclosed(window.kbForm.onMapFilterChange));
 
 
   // Навесим события на input-ы формы создания объявления

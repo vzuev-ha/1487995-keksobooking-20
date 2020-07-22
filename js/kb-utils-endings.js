@@ -8,7 +8,7 @@
    * @param {Array} titles Массив слов для выбора, например ['комната', 'комнаты', 'комнат']);
    * @return {string}
    */
-  function endOfNum(n, titles) {
+  function getEndingByCount(n, titles) {
     /* Было вот так красивенько, но зануда npm test говорит, что "Do not nest ternary expressions"
        Значит, сделаем некрасиво, а это оставим на память.
 
@@ -37,7 +37,7 @@
   //
 
   window.kbUtilsEndings = {
-    endOfNum: endOfNum
+    getEndingByCount: getEndingByCount
   };
 
 })();

@@ -5,34 +5,46 @@
   /**
    * Оптимизированная функция устранения дребезга
    *   в отличие от примера в демонстрации, сначала выполняет действие, а уже потом ждет.
+   *   Но у нее тоже есть минусы:
+   *     1 - даже если кликнули 1 раз, она выполнит коллбэк минимум 2 раза
+   *     2 - как и функция из демонстрации, она игнорирует все промежуточные повторы
+   *         (которые произошли до окончания интервала ожидания).
+   * В нашем конкретном случае этот вариант лучше. В случае отправки по сети данных лучше функция из примера.
    * @param {function(...[*]=)} cb Функция, вызов которой ограничиваем
    * @return {function(...[*]=)}
    */
-  function debounceEnclosed(cb) {
+  function doEnclosed(cb) {
     var lastTimeout = null;
 
     return function () {
+      var parameters = arguments;
       if (!lastTimeout) {
-        cb.apply(null, arguments);
+        cb.apply(null, parameters);
+      } else {
+        window.clearTimeout(lastTimeout);
+      }
 
+      lastTimeout = window.setTimeout(function () {
+        cb.apply(null, parameters);
+
+        // После последнего клика сделаем еще одну паузу перед очисткой переменной таймера
         lastTimeout = window.setTimeout(function () {
           lastTimeout = null;
-
-          // И в конце еще раз вызовем входящую функцию,
-          //   чтобы отработать состояние элементов после последнего клика.
-          cb.apply(null, arguments);
         }, window.kbConstants.DEBOUNCE_INTERVAL);
-      }
+
+      }, window.kbConstants.DEBOUNCE_INTERVAL);
     };
   }
 
+
   /**
    * Функция устранения дребезга из демонстрации code and magic
-   *   ее минус в том, что она дает задержку первого срабатывания, это неприятно.
+   *   ее минус в том, что она не дает выполниться коллбэку, пока не пройдет интервал после последнего клика.
+   *   То есть, пользователь тычет в интерфейс, но ничего не происходит, пока он не прекратит. Это недружелюбно.
    * @param {function(...[*]=)} cb Функция, вызов которой ограничиваем
    * @return {function(...[*]=)}
    */
-  function debounceEnclosedWait(cb) {
+  function doEnclosedWait(cb) {
     var lastTimeout = null;
 
     return function () {
@@ -54,7 +66,7 @@
    * Одиночный устранитель дребезга (если используется только он один в проекте)
    * @param {function(...[*]=)} cb Функция, вызов которой ограничиваем
    */
-  function debounceSingle(cb) {
+  function doSingle(cb) {
     if (lastTimeout) {
       window.clearTimeout(lastTimeout);
     }
@@ -67,10 +79,10 @@
   //
 
   window.kbDebouncer = {
-    debounceEnclosed: debounceEnclosed,
+    doEnclosed: doEnclosed,
 
-    debounceEnclosedWait: debounceEnclosedWait,
-    debounceSingle: debounceSingle
+    doEnclosedWait: doEnclosedWait,
+    doSingle: doSingle
   };
 
 })();

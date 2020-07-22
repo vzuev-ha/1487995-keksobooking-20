@@ -7,7 +7,7 @@
    * @param {{offer: {features: [], rooms: number, address: string, checkin: string, price: number, guests: number, description: string, title: string, type: string, checkout: string, photos: []}, author: {avatar: string}, location: {x: number, y: number}}} apartmentObject Объект размещения
    * @return {ActiveX.IXMLDOMNode | Node}
    */
-  function generateCardFromTemplate(apartmentObject) {
+  function generateFromTemplate(apartmentObject) {
     var card = cardTemplate.cloneNode(true);
 
     // Заголовок
@@ -49,12 +49,12 @@
 
     if (apartmentObject.offer.rooms) {
       capacityText = apartmentObject.offer.rooms + ' ' + window.kbUtilsEndings
-        .endOfNum(apartmentObject.offer.rooms, window.kbConstants.PLURAL_ENDINGS_ROOM);
+        .getEndingByCount(apartmentObject.offer.rooms, window.kbConstants.PLURAL_ENDINGS_ROOM);
     }
 
     if (apartmentObject.offer.guests) {
       capacityText += ' для ' + apartmentObject.offer.guests + ' ' + window.kbUtilsEndings
-        .endOfNum(apartmentObject.offer.guests, window.kbConstants.PLURAL_ENDINGS_GUEST);
+        .getEndingByCount(apartmentObject.offer.guests, window.kbConstants.PLURAL_ENDINGS_GUEST);
     }
 
     if (capacityText !== '') {
@@ -151,7 +151,7 @@
   //
 
   window.kbCard = {
-    generateCardFromTemplate: generateCardFromTemplate
+    generateFromTemplate: generateFromTemplate
   };
 
 })();

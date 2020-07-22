@@ -60,11 +60,13 @@
 
   var BACKEND_SUBMIT_URL = 'https://javascript.pages.academy/keksobooking';
   var BACKEND_DATA_URL = 'https://javascript.pages.academy/keksobooking/data';
-  var BACKEND_STATUS_CODES = {
-    OK: 200
+  var BackendStatusCodes = {
+    OK: 200,
+    NOT_FOUND: 404,
+    BAD_REQUEST: 400,
   };
   var BACKEND_TIMEOUT_IN_MS = 10000;
-  var BACKEND_HTTP_METHODS = {
+    var BackendHTTPMethods = {
     GET: 'GET',
     POST: 'POST'
   };
@@ -89,7 +91,7 @@
   //
 
   window.kbConstants = {
-    PINS_COUNT: MAX_PINS_COUNT,
+    MAX_PINS_COUNT: MAX_PINS_COUNT,
 
     MAP_PIN_MAIN_TAIL_OFFSET: MAP_PIN_MAIN_TAIL_OFFSET,
 
@@ -135,9 +137,9 @@
 
     BACKEND_SUBMIT_URL: BACKEND_SUBMIT_URL,
     BACKEND_DATA_URL: BACKEND_DATA_URL,
-    BACKEND_STATUS_CODES: BACKEND_STATUS_CODES,
+    BackendStatusCodes: BackendStatusCodes,
     BACKEND_TIMEOUT_IN_MS: BACKEND_TIMEOUT_IN_MS,
-    BACKEND_HTTP_METHODS: BACKEND_HTTP_METHODS,
+    BackendHTTPMethods: BackendHTTPMethods,
 
     DEBOUNCE_INTERVAL: DEBOUNCE_INTERVAL,
 
