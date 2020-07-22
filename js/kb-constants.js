@@ -66,7 +66,7 @@
     BAD_REQUEST: 400,
   };
   var BACKEND_TIMEOUT_IN_MS = 10000;
-    var BackendHTTPMethods = {
+  var BackendHTTPMethods = {
     GET: 'GET',
     POST: 'POST'
   };

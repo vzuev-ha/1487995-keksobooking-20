@@ -252,10 +252,6 @@
   // Для этого запомним и экспортируем ссылку на Тип жилья
   var offerTypeInput = adForm.querySelector('#type');
 
-  var adFormSubmitButton = adForm.querySelector('.ad-form__submit');
-  var adFormResetButton = adForm.querySelector('.ad-form__reset');
-
-
 
   //
   // Экспорт
