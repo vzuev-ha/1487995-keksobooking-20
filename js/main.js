@@ -106,7 +106,7 @@
   //   Навешиваем на саму форму, так как мы все равно опрашиваем все input-ы
   // И еще воспользуемся приемом для устрания дребезка при обновлении фильтра
   window.kbMap.mapFiltersContainer.addEventListener('change',
-      window.kbDebouncer.doEnclosed(window.kbForm.onMapFilterChange));
+      window.kbDebouncer.doEnclosed(window.kbMap.onFilterChange));
 
 
   // Навесим события на input-ы формы создания объявления

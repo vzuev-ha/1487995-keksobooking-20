@@ -10,19 +10,13 @@
     // Создадим и заполним фрагмент
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < Math.min(window.kbConstants.MAX_PINS_COUNT, objectsJSON.length); i++) {
-      // ТЗ, условие 5.2:  Если в объекте с описанием объявления отсутствует поле offer,
-      //   то метка объявления не должна отображаться на карте.
-      if (!objectsJSON[i].offer) {
-        continue;
-      }
-
-      var pin = window.kbPin.generateFromTemplate(objectsJSON[i]);
-      pin.dataset.index = i.toString();
+    objectsJSON.forEach(function (it, objectIndex) {
+      var pin = window.kbPin.generateFromTemplate(it);
+      pin.dataset.index = objectIndex.toString();
       pin.addEventListener('click', onPinClick);
 
       fragment.appendChild(pin);
-    }
+    });
 
     // Добавляем наполненный DocumentFragment в разметку
     clearPinsPlaceholder();
@@ -66,16 +60,9 @@
     // Создадим и заполним фрагмент
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < Math.min(window.kbConstants.MAX_PINS_COUNT, objectsJSON.length); i++) {
-      // ТЗ, условие 5.2:  Если в объекте с описанием объявления отсутствует поле offer,
-      //   то метка объявления не должна отображаться на карте.
-      //   Значит, и карточка не должна существовать
-      if (!objectsJSON[i].offer) {
-        continue;
-      }
-
-      var card = window.kbCard.generateFromTemplate(objectsJSON[i]);
-      card.dataset.index = i.toString();
+    objectsJSON.forEach(function (it, objectIndex) {
+      var card = window.kbCard.generateFromTemplate(it);
+      card.dataset.index = objectIndex.toString();
       card.classList.add('hidden');
 
       var closeButton = card.querySelector('.popup__close');
@@ -90,7 +77,7 @@
 
       globalCardsArray.push(card);
       fragment.appendChild(card);
-    }
+    });
 
     // Добавляем наполненный DocumentFragment в разметку
     removeAllCards();
@@ -99,12 +86,32 @@
 
 
   /**
-   * Обертка, чтобы вызывать создание и меток, и карточек одним вызовом
-   * @param {Array} objectsJSON Массив объектов размещения
+   * Обработчик изменения формы фильтрации. Единый, навешивается на родителя фильтров
+   * @listens {event} evt Событие
    */
-  function generatePinsAndCards(objectsJSON) {
-    generatePins(objectsJSON);
-    generateCards(objectsJSON);
+  function onFilterChange() {
+    // Поскольку по критерию Б23 мы должны остановить цикл, когда найдем нужное количество элементов,
+    //   мы вынуждены отказаться от красивого array.filter и использовать простой for
+    var ApartmentsJSON = [];
+
+    for (var i = 0; i < globalApartmentsJSON.length; i++) {
+      // ТЗ, условие 5.2:  Если в объекте с описанием объявления отсутствует поле offer,
+      //   то метка объявления не должна отображаться на карте.
+      if (!globalApartmentsJSON[i].offer) {
+        continue;
+      }
+
+      if (window.kbPin.isAvailable(globalApartmentsJSON[i])) {
+        ApartmentsJSON.push(globalApartmentsJSON[i]);
+      }
+
+      if (ApartmentsJSON.length === window.kbConstants.MAX_PINS_COUNT) {
+        break;
+      }
+    }
+
+    generatePins(ApartmentsJSON);
+    generateCards(ApartmentsJSON);
   }
 
 
@@ -116,9 +123,10 @@
    */
   function reloadMapData(objectsJSON) {
     // Запишем полученные карточки объявлений в глобальную переменную, чтобы можно было фильтровать
-    window.kbMap.globalApartmentsJSON = objectsJSON;
+    globalApartmentsJSON = objectsJSON;
 
-    generatePinsAndCards(objectsJSON);
+    mapFiltersContainer.dispatchEvent(new Event('change'));
+
 
     // Как только объявления загружены, покажем фильтры на карте
     // ТЗ, условие 5.9
@@ -171,16 +179,15 @@
    * @param {string} [cardID] Идентификатор карточки
    */
   function showCard(cardID) {
-    for (var i = 0; i < globalCardsArray.length; i++) {
-      if (!globalCardsArray[i].classList.contains('hidden') && i.toString() !== cardID) {
-        globalCardsArray[i].classList.add('hidden');
+    globalCardsArray.forEach(function (it, objectIndex) {
+      if (!it.classList.contains('hidden') && objectIndex.toString() !== cardID) {
+        it.classList.add('hidden');
       }
 
-      if (i.toString() === cardID) {
-        globalCardsArray[i].classList.remove('hidden');
+      if (objectIndex.toString() === cardID) {
+        it.classList.remove('hidden');
       }
-    }
-
+    });
   }
 
 
@@ -263,8 +270,6 @@
   //
 
   window.kbMap = {
-    globalApartmentsJSON: globalApartmentsJSON,
-
     mapControl: mapControl,
     mapFiltersContainer: mapFiltersContainer,
     mapFilters: mapFilters,
@@ -273,7 +278,7 @@
     mapPinMain: mapPinMain,
     globalMapPinMainTailCoords: globalMapPinMainTailCoords,
 
-    generatePinsAndCards: generatePinsAndCards,
+    onFilterChange: onFilterChange,
     reloadMapData: reloadMapData,
 
     fillAddressFromPinMain: fillAddressFromPinMain,

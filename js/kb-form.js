@@ -63,90 +63,6 @@
 
 
   /**
-   * Проверка, должен ли переданный pin отображаться на карте с учетом активных фильтров
-   * @param {Object} it Проверяемый pin
-   * @return {boolean}
-   */
-  function isPinAvailable(it) {
-    var housingType = window.kbMap.mapFiltersContainer.querySelector('#housing-type').value;
-    var isHousingType = (housingType && housingType !== 'any') ? (it.offer.type === housingType) : true;
-
-    var housingPrice = window.kbMap.mapFiltersContainer.querySelector('#housing-price').value;
-    var isHousingPrice = true;
-    if (housingPrice) {
-      switch (housingPrice) {
-        case 'middle':
-          isHousingPrice = it.offer.price >= 10000 && it.offer.price <= 50000;
-          break;
-        case 'low':
-          isHousingPrice = it.offer.price < 10000;
-          break;
-        case 'high':
-          isHousingPrice = it.offer.price > 50000;
-          break;
-      }
-    }
-
-    var housingRooms = window.kbMap.mapFiltersContainer.querySelector('#housing-rooms').value;
-    var isHousingRooms = (housingRooms && housingRooms !== 'any')
-      ? (it.offer.rooms.toString() === housingRooms)
-      : true;
-
-    var housingGuests = window.kbMap.mapFiltersContainer.querySelector('#housing-guests').value;
-    var isHousingGuests = (housingGuests && housingGuests !== 'any')
-      ? (it.offer.guests.toString() === housingGuests)
-      : true;
-
-
-    var housingWifi = window.kbMap.mapFiltersContainer.querySelector('#filter-wifi').checked;
-    var isHousingWifi = housingWifi ? (it.offer.features.indexOf('wifi') !== -1) : true;
-
-    var housingDishwasher = window.kbMap.mapFiltersContainer.querySelector('#filter-dishwasher').checked;
-    var isHousingDishwasher = housingDishwasher ? (it.offer.features.indexOf('dishwasher') !== -1) : true;
-
-    var housingParking = window.kbMap.mapFiltersContainer.querySelector('#filter-parking').checked;
-    var isHousingParking = housingParking ? (it.offer.features.indexOf('parking') !== -1) : true;
-
-    var housingWasher = window.kbMap.mapFiltersContainer.querySelector('#filter-washer').checked;
-    var isHousingWasher = housingWasher ? (it.offer.features.indexOf('washer') !== -1) : true;
-
-    var housingElevator = window.kbMap.mapFiltersContainer.querySelector('#filter-elevator').checked;
-    var isHousingElevator = housingElevator ? (it.offer.features.indexOf('elevator') !== -1) : true;
-
-    var housingConditioner = window.kbMap.mapFiltersContainer.querySelector('#filter-conditioner').checked;
-    var isHousingConditioner = housingConditioner ? (it.offer.features.indexOf('conditioner') !== -1) : true;
-
-
-    return isHousingType && isHousingPrice && isHousingRooms && isHousingGuests &&
-      isHousingWifi && isHousingDishwasher && isHousingParking &&
-      isHousingWasher && isHousingElevator && isHousingConditioner;
-  }
-
-
-  /**
-   * Обработчик изменения формы фильтрации. Единый, навешивается на родителя фильтров
-   * @listens {event} evt Событие
-   */
-  function onMapFilterChange() {
-    // Поскольку по критерию Б23 мы должны остановить цикл, когда найдем нужное количество элементов,
-    //   мы вынуждены отказаться от красивого array.filter и использовать простой for
-    var ApartmentsJSON = [];
-
-    for (var i = 0; i < window.kbMap.globalApartmentsJSON.length; i++) {
-      if (isPinAvailable(window.kbMap.globalApartmentsJSON[i])) {
-        ApartmentsJSON.push(window.kbMap.globalApartmentsJSON[i]);
-      }
-
-      if (ApartmentsJSON.length === window.kbConstants.MAX_PINS_COUNT) {
-        break;
-      }
-    }
-
-    window.kbMap.generatePinsAndCards(ApartmentsJSON);
-  }
-
-
-  /**
    * Устанавливает или снимает всем элементам в коллекции свойство disabled
    * @param {NodeListOf<Element>} controlsArray Коллекция элементов
    * @param {boolean} isEnabled Доступен?
@@ -267,8 +183,6 @@
     changeCapacityValidity: changeCapacityValidity,
     switchMapFiltersAccess: switchMapFiltersAccess,
     switchAdFormControlsAccess: switchAdFormControlsAccess,
-
-    onMapFilterChange: onMapFilterChange,
 
     onAdFormSubmit: onAdFormSubmit,
     onAdFormResetClick: onAdFormResetClick
